@@ -1,0 +1,15 @@
+name: DrakesTech
+version: 1.0
+main: me.jackstar.drakestech.DrakesTechPlugin
+api-version: '1.20'
+authors: [JackStar]
+description: Tech machines and energy system for DrakesCraft
+commands:
+  drakestech:
+    description: Admin command for DrakesTech
+    usage: /drakestech give <player> <machine_id>
+    permission: drakestech.admin
+permissions:
+  drakestech.admin:
+    description: Allows use of DrakesTech admin command
+    default: op
