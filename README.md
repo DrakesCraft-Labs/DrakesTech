@@ -90,3 +90,5 @@ python .\tools\content-gen\generate_massive_tech_content.py
 
 ## Compatibilidad Slimefun
 - Plan tecnico: `SLIMEFUN_COMPAT_PLAN.md`
+- Asimilacion por addons (investigacion + backlog): `SLIMEFUN_ADDON_ASSIMILATION_PLAN.md`
+- Scanner local de features por addon: `tools/slimefun-research/scan_addon_features.ps1`
