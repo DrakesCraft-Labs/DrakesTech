@@ -6,26 +6,31 @@ import me.jackstar.drakestech.api.DrakesTechApi;
 import me.jackstar.drakestech.api.enchant.TechEnchantmentDefinition;
 import me.jackstar.drakestech.api.guide.TechGuideEntry;
 import me.jackstar.drakestech.api.guide.TechGuideModule;
+import me.jackstar.drakestech.api.item.TechItemDefinition;
 import me.jackstar.drakestech.api.machine.MachineDefinition;
 import me.jackstar.drakestech.manager.MachineManager;
 import me.jackstar.drakestech.machines.factory.MachineFactory;
+import me.jackstar.drakestech.recipe.TechCraftingRecipeService;
 import me.jackstar.drakestech.recipe.TechRecipeEngine;
 import me.jackstar.drakestech.research.TechResearchService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class DrakesTechCommand implements CommandExecutor {
+public class DrakesTechCommand implements TabExecutor {
 
     private final DrakesTechPlugin plugin;
     private final MachineFactory machineFactory;
@@ -84,8 +89,8 @@ public class DrakesTechCommand implements CommandExecutor {
     }
 
     private boolean handleGive(CommandSender sender, String label, String[] args) {
-        if (args.length < 3) {
-            MessageUtils.send(sender, "<red>Usage: /" + label + " give <player> <machine_id></red>");
+        if (args.length < 4) {
+            MessageUtils.send(sender, "<red>Usage: /" + label + " give <player> <machine|item> <id> [amount]</red>");
             return true;
         }
 
@@ -95,18 +100,53 @@ public class DrakesTechCommand implements CommandExecutor {
             return true;
         }
 
-        String machineId = args[2];
-        Optional<ItemStack> machineItem = machineFactory.createMachineItem(machineId);
-        if (machineItem.isEmpty()) {
-            MessageUtils.send(sender, "<red>Unknown machine id: <gray>" + machineId + "</gray></red>");
+        String type = args[2].toLowerCase();
+        String id = args[3];
+        int amount = 1;
+        if (args.length >= 5) {
+            try {
+                amount = Math.max(1, Integer.parseInt(args[4]));
+            } catch (NumberFormatException ignored) {
+                MessageUtils.send(sender, "<red>Amount must be a number.</red>");
+                return true;
+            }
+        }
+
+        if ("machine".equals(type)) {
+            Optional<ItemStack> machineItem = machineFactory.createMachineItem(id);
+            if (machineItem.isEmpty()) {
+                MessageUtils.send(sender, "<red>Unknown machine id: <gray>" + id + "</gray></red>");
+                MessageUtils.send(sender,
+                        "<yellow>Available:</yellow> <gray>" + String.join(", ", machineFactory.getSupportedMachineIds()) + "</gray>");
+                return true;
+            }
+
+            for (int i = 0; i < amount; i++) {
+                target.getInventory().addItem(machineItem.get().clone());
+            }
             MessageUtils.send(sender,
-                    "<yellow>Available:</yellow> <gray>" + String.join(", ", machineFactory.getSupportedMachineIds()) + "</gray>");
+                    "<green>Given <yellow>" + id + "</yellow> x" + amount + " to <aqua>" + target.getName() + "</aqua>.</green>");
+            MessageUtils.send(target, "<green>You received machine: <yellow>" + id + "</yellow> x" + amount + ".</green>");
             return true;
         }
 
-        target.getInventory().addItem(machineItem.get());
-        MessageUtils.send(sender, "<green>Given <yellow>" + machineId + "</yellow> to <aqua>" + target.getName() + "</aqua>.</green>");
-        MessageUtils.send(target, "<green>You received machine: <yellow>" + machineId + "</yellow>.</green>");
+        if ("item".equals(type)) {
+            Optional<ItemStack> custom = api.createTechItem(id, amount);
+            if (custom.isEmpty()) {
+                String available = api.getTechItems().stream().map(TechItemDefinition::getId).sorted().collect(Collectors.joining(", "));
+                MessageUtils.send(sender, "<red>Unknown tech item id: <gray>" + id + "</gray></red>");
+                MessageUtils.send(sender, "<yellow>Available:</yellow> <gray>" + (available.isBlank() ? "none" : available) + "</gray>");
+                return true;
+            }
+
+            target.getInventory().addItem(custom.get());
+            MessageUtils.send(sender,
+                    "<green>Given item <yellow>" + id + "</yellow> x" + amount + " to <aqua>" + target.getName() + "</aqua>.</green>");
+            MessageUtils.send(target, "<green>You received tech item: <yellow>" + id + "</yellow> x" + amount + ".</green>");
+            return true;
+        }
+
+        MessageUtils.send(sender, "<red>Unknown give type. Use <yellow>machine</yellow> or <yellow>item</yellow>.</red>");
         return true;
     }
 
@@ -157,7 +197,7 @@ public class DrakesTechCommand implements CommandExecutor {
             }
         }
 
-        String query = String.join(" ", java.util.Arrays.copyOfRange(args, queryStart, args.length)).trim();
+        String query = String.join(" ", Arrays.copyOfRange(args, queryStart, args.length)).trim();
         if (query.isBlank()) {
             MessageUtils.send(sender, "<red>You must provide a query.</red>");
             return true;
@@ -170,7 +210,7 @@ public class DrakesTechCommand implements CommandExecutor {
 
     private boolean handleList(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            MessageUtils.send(sender, "<red>Usage: /drakestech list <machines|modules|entries|enchantments|addons> [module_id]</red>");
+            MessageUtils.send(sender, "<red>Usage: /drakestech list <machines|items|modules|entries|enchantments|addons> [module_id]</red>");
             return true;
         }
 
@@ -187,6 +227,14 @@ public class DrakesTechCommand implements CommandExecutor {
                         .sorted()
                         .collect(Collectors.joining(", "));
                 MessageUtils.send(sender, "<yellow>Guide modules:</yellow> <gray>" + modules + "</gray>");
+                return true;
+            }
+            case "items" -> {
+                String items = api.getTechItems().stream()
+                        .map(TechItemDefinition::getId)
+                        .sorted()
+                        .collect(Collectors.joining(", "));
+                MessageUtils.send(sender, "<yellow>Tech items:</yellow> <gray>" + (items.isBlank() ? "none" : items) + "</gray>");
                 return true;
             }
             case "entries" -> {
@@ -226,6 +274,7 @@ public class DrakesTechCommand implements CommandExecutor {
         int guideModules = api.getGuideModules().size();
         int guideEntries = api.getGuideModules().stream().mapToInt(module -> api.getGuideEntries(module.getId()).size()).sum();
         int enchantments = api.getEnchantments().size();
+        int items = api.getTechItems().size();
         List<String> addons = plugin.getLoadedAddons();
         TechRecipeEngine recipeEngine = plugin.getRecipeEngine();
 
@@ -235,10 +284,15 @@ public class DrakesTechCommand implements CommandExecutor {
         MessageUtils.send(sender, "<gray>Guide modules:</gray> <aqua>" + guideModules + "</aqua>");
         MessageUtils.send(sender, "<gray>Guide entries:</gray> <aqua>" + guideEntries + "</aqua>");
         MessageUtils.send(sender, "<gray>Enchantments:</gray> <aqua>" + enchantments + "</aqua>");
+        MessageUtils.send(sender, "<gray>Tech items:</gray> <aqua>" + items + "</aqua>");
         MessageUtils.send(sender, "<gray>Research enabled:</gray> <aqua>" + researchService.isEnabled() + "</aqua>");
         if (recipeEngine != null) {
             MessageUtils.send(sender, "<gray>Custom smelting recipes:</gray> <aqua>" + recipeEngine.getCustomSmeltingRecipeCount() + "</aqua>");
             MessageUtils.send(sender, "<gray>Vanilla smelting cache:</gray> <aqua>" + recipeEngine.getVanillaSmeltingRecipeCount() + "</aqua>");
+        }
+        TechCraftingRecipeService craftingRecipeService = plugin.getCraftingRecipeService();
+        if (craftingRecipeService != null) {
+            MessageUtils.send(sender, "<gray>Crafting recipes:</gray> <aqua>" + craftingRecipeService.getRegisteredRecipeCount() + "</aqua>");
         }
         MessageUtils.send(sender, "<gray>Addons:</gray> <aqua>" + addons.size() + "</aqua>");
         if (!addons.isEmpty()) {
@@ -249,11 +303,11 @@ public class DrakesTechCommand implements CommandExecutor {
 
     private void sendUsage(CommandSender sender, String label) {
         MessageUtils.send(sender, "<yellow>DrakesTech commands:</yellow>");
-        MessageUtils.send(sender, "<gray>/" + label + " give <player> <machine_id></gray>");
+        MessageUtils.send(sender, "<gray>/" + label + " give <player> <machine|item> <id> [amount]</gray>");
         MessageUtils.send(sender, "<gray>/" + label + " guide [player]</gray>");
         MessageUtils.send(sender, "<gray>/" + label + " search [player] <query></gray>");
         MessageUtils.send(sender, "<gray>/" + label + " research <unlock|lock|module|status|list> ...</gray>");
-        MessageUtils.send(sender, "<gray>/" + label + " list <machines|modules|entries|enchantments|addons> [module_id]</gray>");
+        MessageUtils.send(sender, "<gray>/" + label + " list <machines|items|modules|entries|enchantments|addons> [module_id]</gray>");
         MessageUtils.send(sender, "<gray>/" + label + " diagnostics</gray>");
         MessageUtils.send(sender, "<gray>/" + label + " reload</gray>");
     }
@@ -343,5 +397,103 @@ public class DrakesTechCommand implements CommandExecutor {
         MessageUtils.send(sender, "<gray>/drakestech research module <player> <module></gray>");
         MessageUtils.send(sender, "<gray>/drakestech research status <player> <module> <entry></gray>");
         MessageUtils.send(sender, "<gray>/drakestech research list <player></gray>");
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias,
+            @NotNull String[] args) {
+        if (args.length == 1) {
+            return matchPrefix(args[0], List.of("give", "guide", "search", "research", "list", "diagnostics", "reload"));
+        }
+
+        String sub = args[0].toLowerCase();
+        return switch (sub) {
+            case "give" -> tabGive(args);
+            case "guide" -> args.length == 2 ? onlinePlayers(args[1]) : Collections.emptyList();
+            case "search" -> args.length == 2 ? onlinePlayers(args[1]) : Collections.emptyList();
+            case "research" -> tabResearch(args);
+            case "list" -> tabList(args);
+            default -> Collections.emptyList();
+        };
+    }
+
+    private List<String> tabGive(String[] args) {
+        if (args.length == 2) {
+            return onlinePlayers(args[1]);
+        }
+        if (args.length == 3) {
+            return matchPrefix(args[2], List.of("machine", "item"));
+        }
+        if (args.length == 4) {
+            if ("machine".equalsIgnoreCase(args[2])) {
+                return matchPrefix(args[3], machineFactory.getSupportedMachineIds());
+            }
+            if ("item".equalsIgnoreCase(args[2])) {
+                List<String> ids = api.getTechItems().stream().map(TechItemDefinition::getId).sorted().toList();
+                return matchPrefix(args[3], ids);
+            }
+        }
+        if (args.length == 5) {
+            return matchPrefix(args[4], List.of("1", "8", "16", "32", "64"));
+        }
+        return Collections.emptyList();
+    }
+
+    private List<String> tabResearch(String[] args) {
+        if (args.length == 2) {
+            return matchPrefix(args[1], List.of("unlock", "lock", "module", "status", "list"));
+        }
+        if (args.length == 3) {
+            return onlinePlayers(args[2]);
+        }
+
+        String action = args[1].toLowerCase();
+        if ("module".equals(action) && args.length == 4) {
+            List<String> modules = api.getGuideModules().stream().map(TechGuideModule::getId).sorted().toList();
+            return matchPrefix(args[3], modules);
+        }
+        if (("unlock".equals(action) || "lock".equals(action) || "status".equals(action)) && args.length == 4) {
+            List<String> modules = api.getGuideModules().stream().map(TechGuideModule::getId).sorted().toList();
+            return matchPrefix(args[3], modules);
+        }
+        if (("unlock".equals(action) || "lock".equals(action) || "status".equals(action)) && args.length == 5) {
+            List<String> entries = api.getGuideEntries(args[3]).stream().map(TechGuideEntry::getId).sorted().toList();
+            return matchPrefix(args[4], entries);
+        }
+
+        return Collections.emptyList();
+    }
+
+    private List<String> tabList(String[] args) {
+        if (args.length == 2) {
+            return matchPrefix(args[1], List.of("machines", "items", "modules", "entries", "enchantments", "addons"));
+        }
+        if (args.length == 3 && "entries".equalsIgnoreCase(args[1])) {
+            List<String> modules = api.getGuideModules().stream().map(TechGuideModule::getId).sorted().toList();
+            return matchPrefix(args[2], modules);
+        }
+        return Collections.emptyList();
+    }
+
+    private List<String> onlinePlayers(String token) {
+        List<String> names = Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .toList();
+        return matchPrefix(token, names);
+    }
+
+    private List<String> matchPrefix(String token, List<String> options) {
+        String needle = token == null ? "" : token.toLowerCase();
+        List<String> matches = new ArrayList<>();
+        for (String option : options) {
+            if (option == null) {
+                continue;
+            }
+            if (option.toLowerCase().startsWith(needle)) {
+                matches.add(option);
+            }
+        }
+        return matches;
     }
 }

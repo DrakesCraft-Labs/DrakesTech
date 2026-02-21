@@ -7,11 +7,14 @@ import me.jackstar.drakestech.commands.DrakesTechCommand;
 import me.jackstar.drakestech.config.DrakesTechSettings;
 import me.jackstar.drakestech.core.DrakesTechApiService;
 import me.jackstar.drakestech.guide.TechGuideManager;
+import me.jackstar.drakestech.item.TechItemRegistry;
 import me.jackstar.drakestech.listeners.DrakesTechBlockListener;
 import me.jackstar.drakestech.manager.MachineManager;
 import me.jackstar.drakestech.machines.factory.MachineFactory;
+import me.jackstar.drakestech.multiblock.MultiblockService;
 import me.jackstar.drakestech.nbt.NbtItemHandler;
 import me.jackstar.drakestech.nbt.PdcNbtItemHandler;
+import me.jackstar.drakestech.recipe.TechCraftingRecipeService;
 import me.jackstar.drakestech.recipe.TechRecipeEngine;
 import me.jackstar.drakestech.research.TechResearchService;
 import org.bukkit.command.PluginCommand;
@@ -19,6 +22,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.List;
 
 public class DrakesTechPlugin extends JavaPlugin {
@@ -33,12 +37,15 @@ public class DrakesTechPlugin extends JavaPlugin {
 
     private MachineManager machineManager;
     private MachineFactory machineFactory;
+    private TechItemRegistry itemRegistry;
     private DrakesTechSettings settings;
     private TechGuideManager guideManager;
     private DrakesTechApiService apiService;
     private DrakesTechAddonLifecycleManager addonLifecycleManager;
     private TechRecipeEngine recipeEngine;
+    private TechCraftingRecipeService craftingRecipeService;
     private TechResearchService researchService;
+    private MultiblockService multiblockService;
 
     @Override
     public void onEnable() {
@@ -49,20 +56,22 @@ public class DrakesTechPlugin extends JavaPlugin {
         logLoading("Loading settings");
         settings = new DrakesTechSettings(this);
 
+        logLoading("Initializing NBT and machine factory");
+        NbtItemHandler nbtItemHandler = new PdcNbtItemHandler(this);
+        machineFactory = new MachineFactory(nbtItemHandler);
+        itemRegistry = new TechItemRegistry(nbtItemHandler);
+
         logLoading("Loading recipe engine");
-        recipeEngine = new TechRecipeEngine(this);
+        recipeEngine = new TechRecipeEngine(this, itemRegistry);
+        craftingRecipeService = new TechCraftingRecipeService(this, itemRegistry);
 
         logLoading("Loading research service");
         researchService = new TechResearchService(this, settings);
         researchService.start();
 
-        logLoading("Initializing NBT and machine factory");
-        NbtItemHandler nbtItemHandler = new PdcNbtItemHandler(this);
-        machineFactory = new MachineFactory(nbtItemHandler);
-
         logLoading("Initializing guide manager and public API");
         guideManager = new TechGuideManager(this, settings, nbtItemHandler, researchService);
-        apiService = new DrakesTechApiService(this, machineFactory, guideManager, researchService);
+        apiService = new DrakesTechApiService(this, machineFactory, itemRegistry, guideManager, researchService);
         guideManager.bindApi(apiService);
 
         logLoading("Registering API service for expansions");
@@ -71,10 +80,14 @@ public class DrakesTechPlugin extends JavaPlugin {
 
         logLoading("Registering built-in content");
         BuiltinTechContentLoader.registerDefaults(this, apiService, recipeEngine);
+        recipeEngine.reload();
+        craftingRecipeService.reload();
 
         logLoading("Starting machine manager");
         machineManager = new MachineManager(this, machineFactory);
         machineManager.start();
+        multiblockService = new MultiblockService(this, machineFactory, machineManager);
+        multiblockService.reload();
 
         logLoading("Starting addon lifecycle manager");
         addonLifecycleManager = new DrakesTechAddonLifecycleManager(this, apiService, machineManager);
@@ -88,13 +101,15 @@ public class DrakesTechPlugin extends JavaPlugin {
         logLoading("Registering command executors");
         PluginCommand drakesTechCommand = getCommand("drakestech");
         if (drakesTechCommand != null) {
-            drakesTechCommand.setExecutor(new DrakesTechCommand(this, machineFactory, machineManager, apiService, researchService));
+            DrakesTechCommand commandHandler = new DrakesTechCommand(this, machineFactory, machineManager, apiService, researchService);
+            drakesTechCommand.setExecutor(commandHandler);
+            drakesTechCommand.setTabCompleter(commandHandler);
         } else {
             getLogger().warning("Command 'drakestech' not found in plugin.yml.");
         }
 
         logLoading("Registering listeners");
-        getServer().getPluginManager().registerEvents(new DrakesTechBlockListener(machineManager, machineFactory), this);
+        getServer().getPluginManager().registerEvents(new DrakesTechBlockListener(machineManager, machineFactory, multiblockService), this);
         getServer().getPluginManager().registerEvents(guideManager, this);
         getServer().getPluginManager().registerEvents(researchService, this);
 
@@ -125,23 +140,27 @@ public class DrakesTechPlugin extends JavaPlugin {
         if (settings != null) {
             settings.reload();
         }
-        if (recipeEngine != null) {
-            recipeEngine.reload();
-        }
-        if (researchService != null) {
-            researchService.reload();
-        }
         if (apiService != null) {
             apiService.unregisterOwnedContent(getName());
             if (recipeEngine != null) {
                 BuiltinTechContentLoader.registerDefaults(this, apiService, recipeEngine);
+                recipeEngine.reload();
             }
+            if (craftingRecipeService != null) {
+                craftingRecipeService.reload();
+            }
+        }
+        if (researchService != null) {
+            researchService.reload();
         }
         if (addonLifecycleManager != null) {
             addonLifecycleManager.reloadAll();
         }
         if (machineManager != null) {
             machineManager.reloadMachinesFromDisk();
+        }
+        if (multiblockService != null) {
+            multiblockService.reload();
         }
         getLogger().info("[Reload] DrakesTech runtime reloaded.");
     }
@@ -161,11 +180,17 @@ public class DrakesTechPlugin extends JavaPlugin {
         return recipeEngine;
     }
 
+    public TechCraftingRecipeService getCraftingRecipeService() {
+        return craftingRecipeService;
+    }
+
     private void saveDefaultResources() {
-        if (getResource("drakestech.yml") != null) {
+        File settingsFile = new File(getDataFolder(), "drakestech.yml");
+        if (!settingsFile.exists() && getResource("drakestech.yml") != null) {
             saveResource("drakestech.yml", false);
         }
-        if (getResource("tech-content.yml") != null) {
+        File contentFile = new File(getDataFolder(), "tech-content.yml");
+        if (!contentFile.exists() && getResource("tech-content.yml") != null) {
             saveResource("tech-content.yml", false);
         }
     }

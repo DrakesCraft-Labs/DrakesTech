@@ -5,6 +5,7 @@ import me.jackstar.drakestech.api.DrakesTechApi;
 import me.jackstar.drakestech.api.enchant.TechEnchantmentDefinition;
 import me.jackstar.drakestech.api.guide.TechGuideEntry;
 import me.jackstar.drakestech.api.guide.TechGuideModule;
+import me.jackstar.drakestech.api.item.TechItemDefinition;
 import me.jackstar.drakestech.api.machine.MachineDefinition;
 import me.jackstar.drakestech.machines.impl.ElectricFurnace;
 import me.jackstar.drakestech.machines.impl.SolarGenerator;
@@ -34,6 +35,7 @@ public final class BuiltinTechContentLoader {
         File contentFile = new File(plugin.getDataFolder(), CONTENT_FILE_NAME);
         FileConfiguration config = YamlConfiguration.loadConfiguration(contentFile);
 
+        registerItems(plugin, api, config.getConfigurationSection("items"));
         registerModules(plugin, api, config.getConfigurationSection("modules"));
         registerEnchantments(plugin, api, config.getConfigurationSection("enchantments"));
         registerMachines(plugin, api, recipeEngine, config.getConfigurationSection("machines"));
@@ -176,17 +178,60 @@ public final class BuiltinTechContentLoader {
             Material icon = parseMaterial(entrySection.getString("icon"), Material.PAPER, plugin, "entry " + id);
             List<String> description = readStringList(entrySection, "description");
             List<String> recipe = readStringList(entrySection, "recipe");
+            String previewItemId = normalize(entrySection.getString("preview-item"));
             Material previewMaterial = parseMaterial(entrySection.getString("preview-material"), icon, plugin, "entry preview " + id);
 
-            ItemStack previewItem = new ItemBuilder(previewMaterial)
-                    .name(displayName)
-                    .lore(description)
-                    .build();
+            ItemStack previewItem = null;
+            if (previewItemId != null) {
+                previewItem = api.createTechItem(previewItemId).orElse(null);
+                if (previewItem == null) {
+                    plugin.getLogger().warning("Entry '" + id + "' references unknown preview-item '" + previewItemId + "'.");
+                }
+            }
+            if (previewItem == null) {
+                previewItem = new ItemBuilder(previewMaterial)
+                        .name(displayName)
+                        .lore(description)
+                        .build();
+            }
 
             TechGuideEntry entry = new TechGuideEntry(id, module, displayName, icon, description, recipe, previewItem);
             boolean ok = api.registerGuideEntry(plugin, entry);
             if (!ok) {
                 plugin.getLogger().warning("Failed to register guide entry '" + id + "'.");
+            }
+        }
+    }
+
+    private static void registerItems(JavaPlugin plugin, DrakesTechApi api, ConfigurationSection section) {
+        if (section == null) {
+            plugin.getLogger().warning("No 'items' section found in " + CONTENT_FILE_NAME + ".");
+            return;
+        }
+
+        for (String id : section.getKeys(false)) {
+            ConfigurationSection itemSection = section.getConfigurationSection(id);
+            if (itemSection == null || !itemSection.getBoolean("enabled", true)) {
+                continue;
+            }
+
+            String displayName = itemSection.getString("display-name", fallbackTitle(id));
+            Material baseMaterial = parseMaterial(itemSection.getString("base-material"), Material.PAPER, plugin, "item " + id);
+            List<String> lore = readStringList(itemSection, "description");
+            int customModelData = Math.max(0, itemSection.getInt("custom-model-data", 0));
+            boolean glowing = itemSection.getBoolean("glowing", false);
+
+            TechItemDefinition definition = new TechItemDefinition(
+                    id,
+                    displayName,
+                    baseMaterial,
+                    lore,
+                    customModelData,
+                    glowing);
+
+            boolean ok = api.registerTechItem(plugin, definition);
+            if (!ok) {
+                plugin.getLogger().warning("Failed to register tech item '" + id + "'.");
             }
         }
     }
@@ -257,7 +302,16 @@ public final class BuiltinTechContentLoader {
             return fallback;
         }
 
-        Material material = Material.matchMaterial(rawValue.trim(), true);
+        String clean = rawValue.trim();
+        Material material = null;
+        try {
+            material = Material.valueOf(clean.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
+            // Fallback for namespaced keys or non-standard formatting.
+        }
+        if (material == null) {
+            material = Material.matchMaterial(clean);
+        }
         if (material == null) {
             plugin.getLogger().warning("Invalid material '" + rawValue + "' in " + context + ". Using " + fallback + ".");
             return fallback;

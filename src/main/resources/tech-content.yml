@@ -1,31 +1,202 @@
 # DrakesTech content registry.
-# This file defines modules, guide entries, enchantments and machine templates.
-# You can tune progression and texts without touching Java code.
+# Everything here is data-driven. You can add items, modules and machine recipes without touching Java code.
 
 guide:
   # Auto-create one guide entry for each enchantment declared below.
   auto-create-enchantment-entries: true
 
+items:
+  # Custom tech materials used by machines and progression.
+  # [DANGER] Do not rename ids after launch. Existing items in worlds keep the old id.
+
+  conductive_copper_ingot:
+    enabled: true
+    base-material: COPPER_INGOT
+    custom-model-data: 21001
+    display-name: "<#f08d49><b>Conductive Copper Ingot</b></#f08d49>"
+    description:
+      - "<gray>Purified copper prepared for energy systems.</gray>"
+
+  copper_plate:
+    enabled: true
+    base-material: IRON_NUGGET
+    custom-model-data: 21002
+    display-name: "<#e67f3d><b>Copper Plate</b></#e67f3d>"
+    description:
+      - "<gray>Pressed conductive plate for machine chassis.</gray>"
+
+  copper_cable:
+    enabled: true
+    base-material: CHAIN
+    custom-model-data: 21003
+    display-name: "<#ffb14a><b>Copper Cable</b></#ffb14a>"
+    description:
+      - "<gray>Transfers power between adjacent nodes.</gray>"
+
+  reinforced_plate:
+    enabled: true
+    base-material: IRON_INGOT
+    custom-model-data: 21004
+    display-name: "<#b9c3cc><b>Reinforced Plate</b></#b9c3cc>"
+    description:
+      - "<gray>High-stability defensive alloy plate.</gray>"
+
+  energy_thread:
+    enabled: true
+    base-material: STRING
+    custom-model-data: 21005
+    display-name: "<#42e3ff><b>Energy Thread</b></#42e3ff>"
+    description:
+      - "<gray>Conductive filament for armor circuits.</gray>"
+
+  energy_core:
+    enabled: true
+    base-material: HEART_OF_THE_SEA
+    custom-model-data: 21006
+    glowing: true
+    display-name: "<gradient:aqua:blue><b>Energy Core</b></gradient>"
+    description:
+      - "<gray>Dense power cell used in advanced equipment.</gray>"
+
 recipes:
-  # If true, Electric Furnace can use vanilla smelting recipes
-  # when no custom recipe is defined below.
-  use-vanilla-fallback: true
+  # If true, Electric Furnace can use vanilla smelting recipes when no custom match exists.
+  # Recommended for pure tech progression: false
+  use-vanilla-fallback: false
 
   smelting:
-    # Example custom recipe.
-    # Input can be "input" (single) or "inputs" (list of materials).
-    silicon:
+    # Input/output supports:
+    # - Vanilla material: COPPER_INGOT
+    # - Explicit material token: material:COPPER_INGOT
+    # - Custom item token: item:copper_plate
+
+    conductive_copper:
       enabled: true
-      input: SAND
-      output: GLASS
+      input: COPPER_INGOT
+      output: item:conductive_copper_ingot
       amount: 1
 
+    copper_plate_press:
+      enabled: true
+      input: item:conductive_copper_ingot
+      output: item:copper_plate
+      amount: 1
+
+    copper_cable_draw:
+      enabled: true
+      input: item:copper_plate
+      output: item:copper_cable
+      amount: 2
+
+    reinforced_plate:
+      enabled: true
+      input: IRON_INGOT
+      output: item:reinforced_plate
+      amount: 1
+
+    energy_thread:
+      enabled: true
+      input: STRING
+      output: item:energy_thread
+      amount: 1
+
+    energy_core:
+      enabled: true
+      input: REDSTONE_BLOCK
+      output: item:energy_core
+      amount: 1
+
+  crafting:
+    # Table crafting recipes. Supports custom items and vanilla materials.
+    # Tokens:
+    # - item:<id> for DrakesTech custom items
+    # - material:<MATERIAL> or just MATERIAL for vanilla
+
+    conductive_copper_bundle:
+      enabled: true
+      type: shaped
+      output: item:conductive_copper_ingot
+      amount: 2
+      shape:
+        - "CCC"
+      ingredients:
+        C: COPPER_INGOT
+
+    copper_plate_press:
+      enabled: true
+      type: shaped
+      output: item:copper_plate
+      amount: 2
+      shape:
+        - "CC"
+      ingredients:
+        C: item:conductive_copper_ingot
+
+    copper_cable_bundle:
+      enabled: true
+      type: shaped
+      output: item:copper_cable
+      amount: 4
+      shape:
+        - "PTP"
+      ingredients:
+        P: item:copper_plate
+        T: STRING
+
+    reinforced_plate_press:
+      enabled: true
+      type: shaped
+      output: item:reinforced_plate
+      amount: 2
+      shape:
+        - "IPI"
+      ingredients:
+        I: IRON_INGOT
+        P: item:copper_plate
+
+    energy_thread_weave:
+      enabled: true
+      type: shapeless
+      output: item:energy_thread
+      amount: 2
+      ingredients:
+        - STRING
+        - REDSTONE
+
+    energy_core_frame:
+      enabled: true
+      type: shaped
+      output: item:energy_core
+      amount: 1
+      shape:
+        - "CRC"
+        - "RBR"
+        - "CRC"
+      ingredients:
+        C: item:copper_cable
+        R: item:reinforced_plate
+        B: REDSTONE_BLOCK
+
+    blaze_blade_recipe:
+      enabled: true
+      type: shaped
+      output: NETHERITE_SWORD
+      amount: 1
+      shape:
+        - "BBB"
+        - "FEF"
+        - " C "
+      ingredients:
+        B: BLAZE_ROD
+        F: FIRE_CHARGE
+        E: item:energy_core
+        C: item:copper_cable
+
 modules:
-  # Internal module id. Keep stable after launch.
   machines:
     enabled: true
     display-name: "<gradient:yellow:gold><b>Machines</b></gradient>"
     icon: OBSERVER
+    unlock-cost-levels: 0
     description:
       - "<gray>Automation and processing blocks.</gray>"
 
@@ -33,6 +204,7 @@ modules:
     enabled: true
     display-name: "<gradient:red:gold><b>Weapons</b></gradient>"
     icon: NETHERITE_SWORD
+    unlock-cost-levels: 18
     description:
       - "<gray>Combat gear and active abilities.</gray>"
 
@@ -40,6 +212,7 @@ modules:
     enabled: true
     display-name: "<gradient:aqua:blue><b>Armor</b></gradient>"
     icon: NETHERITE_CHESTPLATE
+    unlock-cost-levels: 15
     description:
       - "<gray>Defensive sets and passive perks.</gray>"
 
@@ -47,13 +220,15 @@ modules:
     enabled: true
     display-name: "<gradient:green:yellow><b>Energy</b></gradient>"
     icon: REDSTONE
+    unlock-cost-levels: 8
     description:
-      - "<gray>Power production and distribution.</gray>"
+      - "<gray>Power production, routing and components.</gray>"
 
   enchantments:
     enabled: true
     display-name: "<gradient:light_purple:blue><b>Enchantments</b></gradient>"
     icon: ENCHANTED_BOOK
+    unlock-cost-levels: 10
     description:
       - "<gray>Custom enchantments for tech content.</gray>"
 
@@ -72,8 +247,8 @@ machines:
       - "<gray>Generates <yellow>10 J/t</yellow> during clear day.</gray>"
     recipe:
       - "<gray>Top row:</gray> <yellow>Glass | Glass | Glass</yellow>"
-      - "<gray>Middle row:</gray> <yellow>Copper | Daylight Detector | Copper</yellow>"
-      - "<gray>Bottom row:</gray> <yellow>Iron | Redstone Block | Iron</yellow>"
+      - "<gray>Middle row:</gray> <yellow>Copper Plate | Daylight Detector | Copper Plate</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>Reinforced Plate | Energy Core | Reinforced Plate</yellow>"
 
   electric_furnace:
     enabled: true
@@ -82,11 +257,36 @@ machines:
     display-name: "<aqua><b>Electric Furnace</b></aqua>"
     icon: FURNACE
     description:
-      - "<gray>Consumes power to smelt faster.</gray>"
+      - "<gray>Processes tech materials using stored energy.</gray>"
     recipe:
-      - "<gray>Top row:</gray> <yellow>Iron | Furnace | Iron</yellow>"
-      - "<gray>Middle row:</gray> <yellow>Copper | Redstone Block | Copper</yellow>"
-      - "<gray>Bottom row:</gray> <yellow>Iron | Hopper | Iron</yellow>"
+      - "<gray>Top row:</gray> <yellow>Reinforced Plate | Furnace | Reinforced Plate</yellow>"
+      - "<gray>Middle row:</gray> <yellow>Copper Cable | Energy Core | Copper Cable</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>Reinforced Plate | Hopper | Reinforced Plate</yellow>"
+
+multiblocks:
+  # [DANGER] machine-id must match an existing machine id.
+  # Parts format: "x,y,z:MATERIAL" relative to the center block.
+
+  dispenser_table_furnace:
+    enabled: true
+    machine-id: electric_furnace
+    center: CRAFTING_TABLE
+    auto-assemble-on-place: true
+    consume-components: true
+    parts:
+      - "1,0,0:DISPENSER"
+
+  solar_cross_generator:
+    enabled: true
+    machine-id: solar_generator
+    center: DAYLIGHT_DETECTOR
+    auto-assemble-on-place: true
+    consume-components: true
+    parts:
+      - "1,0,0:COPPER_BLOCK"
+      - "-1,0,0:COPPER_BLOCK"
+      - "0,0,1:COPPER_BLOCK"
+      - "0,0,-1:COPPER_BLOCK"
 
 enchantments:
   drake_fury:
@@ -104,8 +304,89 @@ enchantments:
       - "<gray>Converts incoming damage into energy drain.</gray>"
 
 entries:
-  # Generic guide entries (non-machine content).
-  # [DANGER] 'module' must point to an existing module id.
+  conductive_copper_ingot:
+    enabled: true
+    module: energy
+    display-name: "<#f08d49><b>Conductive Copper Ingot</b></#f08d49>"
+    icon: COPPER_INGOT
+    preview-item: conductive_copper_ingot
+    unlock-cost-levels: 2
+    description:
+      - "<gray>Base processed metal for electric components.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>- | Copper Ingot | -</yellow>"
+      - "<gray>Middle row:</gray> <yellow>- | Electric Furnace | -</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>- | - | -</yellow>"
+
+  copper_plate:
+    enabled: true
+    module: energy
+    display-name: "<#e67f3d><b>Copper Plate</b></#e67f3d>"
+    icon: IRON_NUGGET
+    preview-item: copper_plate
+    unlock-cost-levels: 3
+    description:
+      - "<gray>Pressed plate for advanced machine recipes.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>- | item:conductive_copper_ingot | -</yellow>"
+      - "<gray>Middle row:</gray> <yellow>- | Electric Furnace | -</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>- | - | -</yellow>"
+
+  copper_cable:
+    enabled: true
+    module: energy
+    display-name: "<#ffb14a><b>Copper Cable</b></#ffb14a>"
+    icon: CHAIN
+    preview-item: copper_cable
+    unlock-cost-levels: 5
+    description:
+      - "<gray>Main cable unit for your power grid.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>- | item:copper_plate | -</yellow>"
+      - "<gray>Middle row:</gray> <yellow>- | Electric Furnace | -</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>- | - | -</yellow>"
+
+  energy_core:
+    enabled: true
+    module: energy
+    display-name: "<gradient:aqua:blue><b>Energy Core</b></gradient>"
+    icon: HEART_OF_THE_SEA
+    preview-item: energy_core
+    unlock-cost-levels: 7
+    description:
+      - "<gray>Power nucleus used in tech armor and machines.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>- | Redstone Block | -</yellow>"
+      - "<gray>Middle row:</gray> <yellow>- | Electric Furnace | -</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>- | - | -</yellow>"
+
+  reinforced_plate:
+    enabled: true
+    module: energy
+    display-name: "<#b9c3cc><b>Reinforced Plate</b></#b9c3cc>"
+    icon: IRON_INGOT
+    preview-item: reinforced_plate
+    unlock-cost-levels: 4
+    description:
+      - "<gray>Structural part for machine frames.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>Iron Ingot | item:copper_plate | Iron Ingot</yellow>"
+      - "<gray>Middle row:</gray> <yellow>- | Crafting Table | -</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>- | - | -</yellow>"
+
+  energy_thread:
+    enabled: true
+    module: energy
+    display-name: "<#42e3ff><b>Energy Thread</b></#42e3ff>"
+    icon: STRING
+    preview-item: energy_thread
+    unlock-cost-levels: 4
+    description:
+      - "<gray>Basic wire component for armor and modules.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>String | Redstone | -</yellow>"
+      - "<gray>Middle row:</gray> <yellow>- | Crafting Table | -</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>- | - | -</yellow>"
 
   blaze_blade:
     enabled: true
@@ -113,11 +394,13 @@ entries:
     display-name: "<red><b>Blaze Blade</b></red>"
     icon: BLAZE_ROD
     preview-material: NETHERITE_SWORD
+    unlock-cost-levels: 9
     description:
       - "<gray>Melee weapon with burn stacks.</gray>"
     recipe:
       - "<gray>Top row:</gray> <yellow>Blaze Rod | Netherite Sword | Blaze Rod</yellow>"
-      - "<gray>Middle row:</gray> <yellow>Fire Charge | Energy Core | Fire Charge</yellow>"
+      - "<gray>Middle row:</gray> <yellow>Fire Charge | item:energy_core | Fire Charge</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>- | item:copper_cable | -</yellow>"
 
   drake_guard:
     enabled: true
@@ -125,19 +408,10 @@ entries:
     display-name: "<aqua><b>Drake Guard Set</b></aqua>"
     icon: NETHERITE_CHESTPLATE
     preview-material: NETHERITE_CHESTPLATE
+    unlock-cost-levels: 8
     description:
       - "<gray>Balanced defensive tech armor.</gray>"
     recipe:
-      - "<gray>Craft each piece with:</gray>"
-      - "<yellow>Netherite + Reinforced Plates + Energy Thread</yellow>"
-
-  energy_cable:
-    enabled: true
-    module: energy
-    display-name: "<yellow><b>Energy Cable</b></yellow>"
-    icon: CHAIN
-    preview-material: CHAIN
-    description:
-      - "<gray>Transfers power between adjacent nodes.</gray>"
-    recipe:
-      - "<gray>Recipe:</gray> <yellow>Copper + Redstone + Iron</yellow>"
+      - "<gray>Top row:</gray> <yellow>item:reinforced_plate | item:energy_thread | item:reinforced_plate</yellow>"
+      - "<gray>Middle row:</gray> <yellow>item:energy_thread | Netherite Chestplate | item:energy_thread</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>item:reinforced_plate | item:energy_core | item:reinforced_plate</yellow>"

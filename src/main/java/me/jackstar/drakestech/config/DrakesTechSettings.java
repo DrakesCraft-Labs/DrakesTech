@@ -25,6 +25,8 @@ public class DrakesTechSettings {
     private boolean researchEnabled = true;
     private List<String> defaultUnlockedModules = List.of("machines");
     private List<String> defaultUnlockedEntries = List.of();
+    private int researchModuleUnlockCostLevels = 20;
+    private int researchEntryUnlockCostLevels = 8;
 
     public DrakesTechSettings(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -39,7 +41,7 @@ public class DrakesTechSettings {
         openGuideOnRightClick = config.getBoolean("guide.open-on-right-click", true);
 
         String materialRaw = config.getString("guide.book.material", "WRITTEN_BOOK");
-        Material parsedMaterial = materialRaw == null ? null : Material.matchMaterial(materialRaw);
+        Material parsedMaterial = parseMaterial(materialRaw);
         guideBookMaterial = parsedMaterial == null ? Material.WRITTEN_BOOK : parsedMaterial;
 
         guideBookName = config.getString("guide.book.name", guideBookName);
@@ -53,6 +55,8 @@ public class DrakesTechSettings {
             defaultUnlockedModules = List.of("machines");
         }
         defaultUnlockedEntries = normalizeList(config.getStringList("research.default-unlocked-entries"));
+        researchModuleUnlockCostLevels = Math.max(0, config.getInt("research.unlock-costs.module-levels", 20));
+        researchEntryUnlockCostLevels = Math.max(0, config.getInt("research.unlock-costs.entry-levels", 8));
     }
 
     public boolean isAutoGiveGuideOnFirstJoin() {
@@ -91,8 +95,16 @@ public class DrakesTechSettings {
         return defaultUnlockedEntries;
     }
 
+    public int getResearchModuleUnlockCostLevels() {
+        return researchModuleUnlockCostLevels;
+    }
+
+    public int getResearchEntryUnlockCostLevels() {
+        return researchEntryUnlockCostLevels;
+    }
+
     private void saveDefault() {
-        if (plugin.getResource("drakestech.yml") != null) {
+        if (!file.exists() && plugin.getResource("drakestech.yml") != null) {
             plugin.saveResource("drakestech.yml", false);
             return;
         }
@@ -105,6 +117,18 @@ public class DrakesTechSettings {
                 file.createNewFile();
             }
         } catch (IOException ignored) {
+        }
+    }
+
+    private Material parseMaterial(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        String clean = value.trim();
+        try {
+            return Material.valueOf(clean.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
+            return Material.matchMaterial(clean);
         }
     }
 

@@ -29,6 +29,15 @@ research:
   # If false, all guide entries are visible and unlocked for everyone.
   enabled: true
 
+  unlock-costs:
+    # Base XP level cost to unlock a full module from the guide.
+    # This applies when the module is locked and no per-module cost is defined.
+    module-levels: 20
+
+    # Base XP level cost to unlock one guide entry.
+    # This applies when an entry is locked and no per-entry cost is defined.
+    entry-levels: 8
+
   # Modules unlocked by default for every player.
   # Format: module id (lowercase).
   default-unlocked-modules:

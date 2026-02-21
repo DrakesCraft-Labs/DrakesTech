@@ -26,8 +26,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class TechGuideManager implements Listener {
 
@@ -45,6 +48,15 @@ public class TechGuideManager implements Listener {
     private static final int INFO_SLOT = 49;
     private static final int SEARCH_SLOT = 50;
     private static final int NEXT_SLOT = 53;
+    private static final int DETAIL_INVENTORY_SIZE = 54;
+    private static final int DETAIL_RECIPE_TYPE_SLOT = 10;
+    private static final int DETAIL_RESULT_SLOT = 16;
+    private static final int DETAIL_INFO_SLOT = 31;
+    private static final int DETAIL_BACK_SLOT = 49;
+    private static final int[] DETAIL_RECIPE_GRID_SLOTS = { 3, 4, 5, 12, 13, 14, 21, 22, 23 };
+    private static final Pattern MINI_TAG_PATTERN = Pattern.compile("<[^>]+>");
+    private static final Pattern LEGACY_COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
+    private static final Map<String, Material> INGREDIENT_ALIASES = createIngredientAliases();
 
     private final JavaPlugin plugin;
     private final DrakesTechSettings settings;
@@ -96,14 +108,20 @@ public class TechGuideManager implements Listener {
         List<TechGuideModule> pageItems = paginate(modules, safePage);
         for (int i = 0; i < pageItems.size(); i++) {
             TechGuideModule module = pageItems.get(i);
+            String moduleId = normalize(module.getId());
+            if (moduleId == null) {
+                moduleId = module.getId();
+            }
             List<String> lore = new ArrayList<>(module.getDescription());
             lore.add("<dark_gray> ");
             lore.add("<yellow>Click to open module</yellow>");
+
             ItemStack item = new ItemBuilder(module.getIcon())
                     .name(module.getDisplayName())
                     .lore(lore)
                     .build();
-            tagGuideTarget(item, module.getId());
+
+            tagGuideTarget(item, moduleId);
             inventory.setItem(i, item);
         }
 
@@ -136,9 +154,11 @@ public class TechGuideManager implements Listener {
             if (unlocked) {
                 lore.add("<yellow>Click to see recipe details</yellow>");
             } else {
+                int costLevels = researchService.getEntryUnlockCostLevels(normalizedModule, entry.getId());
                 lore.add("<red>Locked</red>");
-                lore.add("<gray>Unlock with admin command:</gray>");
-                lore.add("<gray>/drakestech research unlock <player> " + normalizedModule + " " + normalize(entry.getId()) + "</gray>");
+                lore.add("<gray>Cost:</gray> <yellow>" + costLevels + " XP levels</yellow>");
+                lore.add("<gray>Your levels:</gray> <aqua>" + player.getLevel() + "</aqua>");
+                lore.add("<gold>Click to unlock with XP</gold>");
             }
 
             ItemStack icon = entry.getPreviewItem();
@@ -206,8 +226,11 @@ public class TechGuideManager implements Listener {
             if (unlocked) {
                 lore.add("<yellow>Click to open recipe details</yellow>");
             } else {
+                int costLevels = researchService.getEntryUnlockCostLevels(entry.getModuleId(), entry.getId());
                 lore.add("<red>Locked</red>");
-                lore.add("<gray>/drakestech research unlock <player> " + normalize(entry.getModuleId()) + " " + normalize(entry.getId()) + "</gray>");
+                lore.add("<gray>Cost:</gray> <yellow>" + costLevels + " XP levels</yellow>");
+                lore.add("<gray>Your levels:</gray> <aqua>" + player.getLevel() + "</aqua>");
+                lore.add("<gold>Click to unlock with XP</gold>");
             }
 
             ItemStack item;
@@ -257,43 +280,57 @@ public class TechGuideManager implements Listener {
 
         Inventory inventory = Bukkit.createInventory(
                 new GuideEntryDetailHolder(backTarget),
-                27,
+                DETAIL_INVENTORY_SIZE,
                 MessageUtils.parse("<gold>Recipe:</gold> <yellow>" + entry.getDisplayName() + "</yellow>"));
 
-        ItemStack center;
-        if (!unlocked) {
-            center = new ItemBuilder(Material.BARRIER)
-                    .name("<red><b>Locked Entry</b></red>")
-                    .lore(
-                            "<gray>Entry:</gray> " + entry.getDisplayName(),
-                            "<gray>Unlock with:</gray>",
-                            "<yellow>/drakestech research unlock <player> " + normalize(moduleId) + " " + normalize(entryId) + "</yellow>")
+        fillDetailBackground(inventory);
+
+        ItemStack recipeType = new ItemBuilder(Material.CRAFTING_TABLE)
+                .name("<aqua><b>How to craft</b></aqua>")
+                .lore(
+                        "<gray>Layout style:</gray> <yellow>3x3 Tech Grid</yellow>",
+                        "<gray>Assembly requirements and components.</gray>")
+                .build();
+        inventory.setItem(DETAIL_RECIPE_TYPE_SLOT, recipeType);
+
+        ItemStack result = entry.getPreviewItem();
+        if (result == null || result.getType().isAir()) {
+            result = new ItemBuilder(entry.getIcon())
+                    .name(entry.getDisplayName())
+                    .lore(entry.getDescription())
                     .build();
         } else {
-            center = entry.getPreviewItem();
-            if (center == null || center.getType().isAir()) {
-                center = new ItemBuilder(entry.getIcon())
-                        .name(entry.getDisplayName())
-                        .lore(entry.getDescription())
-                        .build();
-            } else {
-                center = center.clone();
-            }
+            result = result.clone();
         }
-        inventory.setItem(13, center);
+        inventory.setItem(DETAIL_RESULT_SLOT, result);
 
         ItemStack details = new ItemBuilder(Material.BOOK)
-                .name(unlocked ? "<aqua><b>How to craft</b></aqua>" : "<red><b>Entry Locked</b></red>")
+                .name(unlocked ? "<aqua><b>Entry Details</b></aqua>" : "<red><b>Entry Locked</b></red>")
                 .lore(unlocked ? buildRecipeLore(entry) : List.of("<gray>You cannot view recipe details yet.</gray>"))
                 .build();
-        inventory.setItem(15, details);
+        inventory.setItem(DETAIL_INFO_SLOT, details);
+
+        if (unlocked) {
+            applyRecipeGrid(inventory, entry);
+        } else {
+            int costLevels = researchService.getEntryUnlockCostLevels(moduleId, entryId);
+            ItemStack locked = new ItemBuilder(Material.BARRIER)
+                    .name("<red><b>Locked</b></red>")
+                    .lore(
+                            "<gray>Unlock cost:</gray> <yellow>" + costLevels + " XP levels</yellow>",
+                            "<gray>Go back and click the locked entry.</gray>")
+                    .build();
+            for (int slot : DETAIL_RECIPE_GRID_SLOTS) {
+                inventory.setItem(slot, locked);
+            }
+        }
 
         ItemStack back = new ItemBuilder(Material.ARROW)
                 .name("<yellow>Back</yellow>")
                 .lore("<gray>Return to previous menu.</gray>")
                 .build();
         tagGuideTarget(back, TARGET_BACK);
-        inventory.setItem(11, back);
+        inventory.setItem(DETAIL_BACK_SLOT, back);
 
         player.openInventory(inventory);
     }
@@ -317,6 +354,205 @@ public class TechGuideManager implements Listener {
             lore.add("<gray>Recipe not defined yet.</gray>");
         }
         return lore;
+    }
+
+    private void fillDetailBackground(Inventory inventory) {
+        ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                .name("<dark_gray> </dark_gray>")
+                .build();
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+            inventory.setItem(slot, filler);
+        }
+    }
+
+    private void applyRecipeGrid(Inventory inventory, TechGuideEntry entry) {
+        List<String> ingredients = parseRecipeGridIngredients(entry.getRecipeLines());
+        if (ingredients.isEmpty()) {
+            ItemStack missing = new ItemBuilder(Material.BARRIER)
+                    .name("<red>Recipe not defined</red>")
+                    .lore("<gray>Add recipe rows in tech-content.yml</gray>")
+                    .build();
+            for (int slot : DETAIL_RECIPE_GRID_SLOTS) {
+                inventory.setItem(slot, missing);
+            }
+            return;
+        }
+
+        for (int i = 0; i < DETAIL_RECIPE_GRID_SLOTS.length; i++) {
+            String ingredient = i < ingredients.size() ? ingredients.get(i) : "";
+            inventory.setItem(DETAIL_RECIPE_GRID_SLOTS[i], buildIngredientItem(ingredient));
+        }
+    }
+
+    private ItemStack buildIngredientItem(String token) {
+        String trimmed = token == null ? "" : token.trim();
+        if (trimmed.isBlank() || "air".equalsIgnoreCase(trimmed) || "-".equals(trimmed)) {
+            return new ItemStack(Material.AIR);
+        }
+
+        ItemStack customItem = resolveCustomIngredient(trimmed);
+        if (customItem != null && !customItem.getType().isAir()) {
+            return customItem;
+        }
+
+        Material material = resolveIngredientMaterial(trimmed);
+        if (material == null) {
+            return new ItemBuilder(Material.PAPER)
+                    .name("<yellow>" + trimmed + "</yellow>")
+                    .lore(
+                            "<gray>Custom ingredient placeholder.</gray>",
+                            "<gray>Map this token to a real material</gray>")
+                    .build();
+        }
+
+        return new ItemBuilder(material)
+                .name("<yellow>" + prettifyMaterial(material) + "</yellow>")
+                .build();
+    }
+
+    private ItemStack resolveCustomIngredient(String token) {
+        if (api == null) {
+            return null;
+        }
+
+        String stripped = stripMiniFormatting(token);
+        if (stripped.isBlank()) {
+            return null;
+        }
+
+        String normalized = normalize(stripped.replace(' ', '_'));
+        if (normalized == null) {
+            return null;
+        }
+
+        if (normalized.startsWith("item:")) {
+            normalized = normalize(normalized.substring("item:".length()));
+        }
+        if (normalized == null) {
+            return null;
+        }
+
+        return api.createTechItem(normalized, 1).orElse(null);
+    }
+
+    private Material resolveIngredientMaterial(String token) {
+        String stripped = stripMiniFormatting(token);
+        if (stripped.isBlank()) {
+            return null;
+        }
+
+        Material exact = Material.matchMaterial(normalizeMaterialToken(stripped));
+        if (exact != null) {
+            return exact;
+        }
+
+        Material alias = INGREDIENT_ALIASES.get(stripped.toUpperCase(Locale.ROOT));
+        if (alias != null) {
+            return alias;
+        }
+
+        String singular = stripped.endsWith("s") ? stripped.substring(0, stripped.length() - 1) : stripped;
+        return Material.matchMaterial(normalizeMaterialToken(singular));
+    }
+
+    private List<String> parseRecipeGridIngredients(List<String> recipeLines) {
+        if (recipeLines == null || recipeLines.isEmpty()) {
+            return List.of();
+        }
+
+        String[] rows = new String[3];
+        List<String> fallbackRows = new ArrayList<>();
+
+        for (String line : recipeLines) {
+            String clean = stripMiniFormatting(line);
+            if (clean.isBlank()) {
+                continue;
+            }
+
+            String lower = clean.toLowerCase(Locale.ROOT);
+            if (lower.contains("top row")) {
+                rows[0] = extractRecipeRow(clean);
+                continue;
+            }
+            if (lower.contains("middle row")) {
+                rows[1] = extractRecipeRow(clean);
+                continue;
+            }
+            if (lower.contains("bottom row")) {
+                rows[2] = extractRecipeRow(clean);
+                continue;
+            }
+            if (clean.contains("|") || clean.contains("+")) {
+                fallbackRows.add(extractRecipeRow(clean));
+            }
+        }
+
+        for (int i = 0; i < rows.length && i < fallbackRows.size(); i++) {
+            if (rows[i] == null || rows[i].isBlank()) {
+                rows[i] = fallbackRows.get(i);
+            }
+        }
+
+        List<String> ingredients = new ArrayList<>(9);
+        for (int i = 0; i < 3; i++) {
+            String row = rows[i];
+            if (row == null || row.isBlank()) {
+                row = "";
+            }
+
+            String[] split = row.contains("|") ? row.split("\\|") : row.split("\\+");
+            for (int col = 0; col < 3; col++) {
+                if (col < split.length) {
+                    ingredients.add(split[col].trim());
+                } else {
+                    ingredients.add("");
+                }
+            }
+        }
+        return ingredients;
+    }
+
+    private String extractRecipeRow(String line) {
+        int separator = line.indexOf(':');
+        if (separator < 0 || separator >= line.length() - 1) {
+            return line;
+        }
+        return line.substring(separator + 1).trim();
+    }
+
+    private String stripMiniFormatting(String value) {
+        if (value == null) {
+            return "";
+        }
+        String noMiniTags = MINI_TAG_PATTERN.matcher(value).replaceAll("");
+        return LEGACY_COLOR_PATTERN.matcher(noMiniTags).replaceAll("").trim();
+    }
+
+    private String normalizeMaterialToken(String token) {
+        String normalized = stripMiniFormatting(token)
+                .replace('-', ' ')
+                .replace('/', ' ')
+                .trim()
+                .toUpperCase(Locale.ROOT);
+        return normalized.replaceAll("\\s+", "_");
+    }
+
+    private String prettifyMaterial(Material material) {
+        String[] parts = material.name().toLowerCase(Locale.ROOT).split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String part : parts) {
+            if (part.isBlank()) {
+                continue;
+            }
+            if (!builder.isEmpty()) {
+                builder.append(' ');
+            }
+            builder.append(Character.toUpperCase(part.charAt(0)));
+            if (part.length() > 1) {
+                builder.append(part.substring(1));
+            }
+        }
+        return builder.toString();
     }
 
     private void addCommonControls(Inventory inventory, int page, int totalPages, boolean includeSearchShortcut, String infoLine) {
@@ -514,6 +750,11 @@ public class TechGuideManager implements Listener {
             return;
         }
 
+        if (!ensureEntryUnlocked(player, holder.moduleId, target)) {
+            openModule(player, holder.moduleId, holder.page);
+            return;
+        }
+
         GuideBackTarget back = new GuideBackTarget(GuideBackOrigin.MODULE, holder.moduleId, null, holder.page);
         openEntryDetail(player, holder.moduleId, target, back);
     }
@@ -537,8 +778,58 @@ public class TechGuideManager implements Listener {
             return;
         }
 
+        if (!ensureEntryUnlocked(player, split[0], split[1])) {
+            openSearch(player, holder.query, holder.page);
+            return;
+        }
+
         GuideBackTarget back = new GuideBackTarget(GuideBackOrigin.SEARCH, null, holder.query, holder.page);
         openEntryDetail(player, split[0], split[1], back);
+    }
+
+    private boolean ensureEntryUnlocked(Player player, String moduleId, String entryId) {
+        if (researchService.hasUnlocked(player, moduleId, entryId)) {
+            return true;
+        }
+
+        TechResearchService.UnlockXpAttempt attempt = researchService.attemptUnlockEntryWithXp(player, moduleId, entryId);
+        String successMessage = "<yellow>Entry unlocked:</yellow> <aqua>" + moduleId + "|" + entryId + "</aqua>";
+        return handleUnlockAttempt(player, successMessage, attempt);
+    }
+
+    private boolean handleUnlockAttempt(Player player, String successMessage, TechResearchService.UnlockXpAttempt attempt) {
+        if (attempt == null) {
+            MessageUtils.send(player, "<red>Unlock failed.</red>");
+            return false;
+        }
+
+        switch (attempt.result()) {
+            case UNLOCKED -> {
+                MessageUtils.send(player, "<green>" + successMessage + "</green>");
+                if (attempt.requiredLevels() > 0) {
+                    MessageUtils.send(player, "<gray>Spent:</gray> <yellow>" + attempt.requiredLevels()
+                            + " levels</yellow> <dark_gray>|</dark_gray> <gray>Remaining:</gray> <aqua>"
+                            + attempt.currentLevels() + "</aqua>");
+                }
+                return true;
+            }
+            case ALREADY_UNLOCKED -> {
+                return true;
+            }
+            case INSUFFICIENT_LEVELS -> {
+                MessageUtils.send(player, "<red>Not enough XP levels.</red> <gray>Required:</gray> <yellow>"
+                        + attempt.requiredLevels() + "</yellow> <dark_gray>|</dark_gray> <gray>You have:</gray> <aqua>"
+                        + attempt.currentLevels() + "</aqua>");
+                return false;
+            }
+            case RESEARCH_DISABLED -> {
+                return true;
+            }
+            default -> {
+                MessageUtils.send(player, "<red>Could not unlock this item.</red>");
+                return false;
+            }
+        }
     }
 
     private boolean hasGuideBook(Player player) {
@@ -604,6 +895,22 @@ public class TechGuideManager implements Listener {
         }
         String normalized = value.trim().toLowerCase(Locale.ROOT);
         return normalized.isBlank() ? null : normalized;
+    }
+
+    private static Map<String, Material> createIngredientAliases() {
+        Map<String, Material> aliases = new HashMap<>();
+        aliases.put("COPPER", Material.COPPER_INGOT);
+        aliases.put("IRON", Material.IRON_INGOT);
+        aliases.put("GOLD", Material.GOLD_INGOT);
+        aliases.put("ELECTRIC FURNACE", Material.FURNACE);
+        aliases.put("SOLAR GENERATOR", Material.DAYLIGHT_DETECTOR);
+        aliases.put("ENERGY CORE", Material.HEART_OF_THE_SEA);
+        aliases.put("COPPER PLATE", Material.IRON_NUGGET);
+        aliases.put("COPPER CABLE", Material.CHAIN);
+        aliases.put("REINFORCED PLATE", Material.IRON_INGOT);
+        aliases.put("REINFORCED PLATES", Material.NETHERITE_INGOT);
+        aliases.put("ENERGY THREAD", Material.STRING);
+        return aliases;
     }
 
     private static final class GuideModulesHolder implements InventoryHolder {

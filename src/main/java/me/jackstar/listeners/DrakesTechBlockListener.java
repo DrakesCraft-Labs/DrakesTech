@@ -4,6 +4,7 @@ import me.jackstar.drakescraft.utils.MessageUtils;
 import me.jackstar.drakestech.manager.MachineManager;
 import me.jackstar.drakestech.machines.AbstractMachine;
 import me.jackstar.drakestech.machines.factory.MachineFactory;
+import me.jackstar.drakestech.multiblock.MultiblockService;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,10 +22,12 @@ public class DrakesTechBlockListener implements Listener {
 
     private final MachineManager machineManager;
     private final MachineFactory machineFactory;
+    private final MultiblockService multiblockService;
 
-    public DrakesTechBlockListener(MachineManager machineManager, MachineFactory machineFactory) {
+    public DrakesTechBlockListener(MachineManager machineManager, MachineFactory machineFactory, MultiblockService multiblockService) {
         this.machineManager = machineManager;
         this.machineFactory = machineFactory;
+        this.multiblockService = multiblockService;
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -44,6 +47,15 @@ public class DrakesTechBlockListener implements Listener {
             machineManager.registerMachine(machine);
             MessageUtils.send(event.getPlayer(), "<green>Placed machine: <yellow>" + machineId + "</yellow>.</green>");
         });
+        return;
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPossibleMultiblockPlace(BlockPlaceEvent event) {
+        if (event.getItemInHand() != null && machineFactory.isMachineItem(event.getItemInHand())) {
+            return;
+        }
+        multiblockService.tryAutoAssembleAround(event.getBlockPlaced().getLocation(), event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

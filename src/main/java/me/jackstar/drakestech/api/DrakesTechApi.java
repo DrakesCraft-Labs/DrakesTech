@@ -3,6 +3,7 @@ package me.jackstar.drakestech.api;
 import me.jackstar.drakestech.api.enchant.TechEnchantmentDefinition;
 import me.jackstar.drakestech.api.guide.TechGuideEntry;
 import me.jackstar.drakestech.api.guide.TechGuideModule;
+import me.jackstar.drakestech.api.item.TechItemDefinition;
 import me.jackstar.drakestech.api.machine.MachineDefinition;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +48,20 @@ public interface DrakesTechApi {
     boolean registerEnchantment(Plugin owner, TechEnchantmentDefinition definition);
 
     Collection<TechEnchantmentDefinition> getEnchantments();
+
+    boolean registerTechItem(Plugin owner, TechItemDefinition definition);
+
+    boolean unregisterTechItem(String itemId);
+
+    Optional<TechItemDefinition> findTechItem(String itemId);
+
+    Collection<TechItemDefinition> getTechItems();
+
+    Optional<ItemStack> createTechItem(String itemId);
+
+    Optional<ItemStack> createTechItem(String itemId, int amount);
+
+    Optional<String> readTechItemId(ItemStack stack);
 
     ItemStack createGuideBook();
 

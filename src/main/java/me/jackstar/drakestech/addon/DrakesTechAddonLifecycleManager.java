@@ -101,7 +101,7 @@ public class DrakesTechAddonLifecycleManager implements Listener {
         }
 
         DrakesTechApiService.OwnerStats stats = apiService.getOwnerStats(plugin.getName());
-        if (stats.machines() + stats.modules() + stats.entries() + stats.enchantments() > 0) {
+        if (stats.machines() + stats.modules() + stats.entries() + stats.enchantments() + stats.items() > 0) {
             changed = true;
         }
 

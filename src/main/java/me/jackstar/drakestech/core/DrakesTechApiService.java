@@ -4,8 +4,10 @@ import me.jackstar.drakestech.api.DrakesTechApi;
 import me.jackstar.drakestech.api.enchant.TechEnchantmentDefinition;
 import me.jackstar.drakestech.api.guide.TechGuideEntry;
 import me.jackstar.drakestech.api.guide.TechGuideModule;
+import me.jackstar.drakestech.api.item.TechItemDefinition;
 import me.jackstar.drakestech.api.machine.MachineDefinition;
 import me.jackstar.drakestech.guide.TechGuideManager;
+import me.jackstar.drakestech.item.TechItemRegistry;
 import me.jackstar.drakestech.machines.factory.MachineFactory;
 import me.jackstar.drakestech.research.TechResearchService;
 import org.bukkit.entity.Player;
@@ -31,6 +33,7 @@ public class DrakesTechApiService implements DrakesTechApi {
 
     private final Plugin hostPlugin;
     private final MachineFactory machineFactory;
+    private final TechItemRegistry itemRegistry;
     private final TechGuideManager guideManager;
     private final TechResearchService researchService;
 
@@ -42,11 +45,13 @@ public class DrakesTechApiService implements DrakesTechApi {
     private final Map<String, String> moduleOwner = new LinkedHashMap<>();
     private final Map<String, String> entryOwner = new LinkedHashMap<>();
     private final Map<String, String> enchantOwner = new LinkedHashMap<>();
+    private final Map<String, String> itemOwner = new LinkedHashMap<>();
 
-    public DrakesTechApiService(Plugin hostPlugin, MachineFactory machineFactory, TechGuideManager guideManager,
-            TechResearchService researchService) {
+    public DrakesTechApiService(Plugin hostPlugin, MachineFactory machineFactory, TechItemRegistry itemRegistry,
+            TechGuideManager guideManager, TechResearchService researchService) {
         this.hostPlugin = hostPlugin;
         this.machineFactory = machineFactory;
+        this.itemRegistry = itemRegistry;
         this.guideManager = guideManager;
         this.researchService = researchService;
     }
@@ -249,6 +254,57 @@ public class DrakesTechApiService implements DrakesTechApi {
     }
 
     @Override
+    public synchronized boolean registerTechItem(Plugin owner, TechItemDefinition definition) {
+        if (definition == null || definition.getId() == null) {
+            return false;
+        }
+        boolean registered = itemRegistry.register(definition);
+        if (!registered) {
+            return false;
+        }
+
+        String ownerName = ownerName(owner);
+        itemOwner.put(normalize(definition.getId()), ownerName);
+        hostPlugin.getLogger().info("[API] Tech item registered: " + definition.getId() + " by " + ownerName);
+        return true;
+    }
+
+    @Override
+    public synchronized boolean unregisterTechItem(String itemId) {
+        String key = normalize(itemId);
+        if (key == null) {
+            return false;
+        }
+        itemOwner.remove(key);
+        return itemRegistry.unregister(key);
+    }
+
+    @Override
+    public Optional<TechItemDefinition> findTechItem(String itemId) {
+        return itemRegistry.find(itemId);
+    }
+
+    @Override
+    public Collection<TechItemDefinition> getTechItems() {
+        return itemRegistry.getDefinitions();
+    }
+
+    @Override
+    public Optional<ItemStack> createTechItem(String itemId) {
+        return itemRegistry.createItem(itemId);
+    }
+
+    @Override
+    public Optional<ItemStack> createTechItem(String itemId, int amount) {
+        return itemRegistry.createItem(itemId, amount);
+    }
+
+    @Override
+    public Optional<String> readTechItemId(ItemStack stack) {
+        return itemRegistry.readTechItemId(stack);
+    }
+
+    @Override
     public ItemStack createGuideBook() {
         return guideManager.createGuideBook();
     }
@@ -299,6 +355,17 @@ public class DrakesTechApiService implements DrakesTechApi {
                 removed++;
             }
             enchantOwner.remove(enchantId);
+        }
+
+        List<String> itemsToRemove = itemOwner.entrySet().stream()
+                .filter(entry -> owner.equalsIgnoreCase(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .toList();
+        for (String itemId : itemsToRemove) {
+            if (itemRegistry.unregister(itemId)) {
+                removed++;
+            }
+            itemOwner.remove(itemId);
         }
 
         List<String> entriesToRemove = entryOwner.entrySet().stream()
@@ -353,6 +420,7 @@ public class DrakesTechApiService implements DrakesTechApi {
         owners.addAll(moduleOwner.values());
         owners.addAll(entryOwner.values());
         owners.addAll(enchantOwner.values());
+        owners.addAll(itemOwner.values());
         owners.removeIf(value -> value == null || value.isBlank());
         return Collections.unmodifiableSet(owners);
     }
@@ -360,14 +428,15 @@ public class DrakesTechApiService implements DrakesTechApi {
     public synchronized OwnerStats getOwnerStats(String ownerName) {
         String owner = normalizeOwner(ownerName);
         if (owner == null) {
-            return new OwnerStats(0, 0, 0, 0);
+            return new OwnerStats(0, 0, 0, 0, 0);
         }
 
         int machines = (int) machineOwner.values().stream().filter(owner::equalsIgnoreCase).count();
         int modulesCount = (int) moduleOwner.values().stream().filter(owner::equalsIgnoreCase).count();
         int entries = (int) entryOwner.values().stream().filter(owner::equalsIgnoreCase).count();
         int enchants = (int) enchantOwner.values().stream().filter(owner::equalsIgnoreCase).count();
-        return new OwnerStats(machines, modulesCount, entries, enchants);
+        int items = (int) itemOwner.values().stream().filter(owner::equalsIgnoreCase).count();
+        return new OwnerStats(machines, modulesCount, entries, enchants, items);
     }
 
     private String ownerName(Plugin owner) {
@@ -456,6 +525,6 @@ public class DrakesTechApiService implements DrakesTechApi {
         return normalized.contains(query);
     }
 
-    public record OwnerStats(int machines, int modules, int entries, int enchantments) {
+    public record OwnerStats(int machines, int modules, int entries, int enchantments, int items) {
     }
 }

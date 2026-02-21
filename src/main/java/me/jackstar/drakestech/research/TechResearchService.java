@@ -28,12 +28,16 @@ public class TechResearchService implements Listener {
     private final JavaPlugin plugin;
     private final DrakesTechSettings settings;
     private final File dataFile;
+    private final File contentFile;
     private final Map<UUID, Set<String>> unlockedByPlayer = new ConcurrentHashMap<>();
+    private final Map<String, Integer> moduleUnlockCosts = new ConcurrentHashMap<>();
+    private final Map<String, Integer> entryUnlockCosts = new ConcurrentHashMap<>();
 
     public TechResearchService(JavaPlugin plugin, DrakesTechSettings settings) {
         this.plugin = plugin;
         this.settings = settings;
         this.dataFile = new File(plugin.getDataFolder(), "drakestech-research.yml");
+        this.contentFile = new File(plugin.getDataFolder(), "tech-content.yml");
     }
 
     public void start() {
@@ -125,6 +129,81 @@ public class TechResearchService implements Listener {
         return unlockEntry(playerId, moduleId, MODULE_WILDCARD_ENTRY);
     }
 
+    public UnlockXpAttempt attemptUnlockModuleWithXp(Player player, String moduleId) {
+        if (player == null) {
+            return new UnlockXpAttempt(UnlockXpResult.INVALID_INPUT, 0, 0);
+        }
+        if (!settings.isResearchEnabled()) {
+            return new UnlockXpAttempt(UnlockXpResult.RESEARCH_DISABLED, 0, player.getLevel());
+        }
+
+        String module = normalize(moduleId);
+        if (module == null) {
+            return new UnlockXpAttempt(UnlockXpResult.INVALID_INPUT, 0, player.getLevel());
+        }
+
+        int currentLevels = player.getLevel();
+        int requiredLevels = getModuleUnlockCostLevels(module);
+        if (hasUnlocked(player.getUniqueId(), module, MODULE_WILDCARD_ENTRY)) {
+            return new UnlockXpAttempt(UnlockXpResult.ALREADY_UNLOCKED, requiredLevels, currentLevels);
+        }
+
+        if (currentLevels < requiredLevels) {
+            return new UnlockXpAttempt(UnlockXpResult.INSUFFICIENT_LEVELS, requiredLevels, currentLevels);
+        }
+
+        boolean unlocked = unlockModule(player.getUniqueId(), module);
+        if (!unlocked) {
+            if (hasUnlocked(player.getUniqueId(), module, MODULE_WILDCARD_ENTRY)) {
+                return new UnlockXpAttempt(UnlockXpResult.ALREADY_UNLOCKED, requiredLevels, currentLevels);
+            }
+            return new UnlockXpAttempt(UnlockXpResult.INVALID_INPUT, requiredLevels, currentLevels);
+        }
+
+        if (requiredLevels > 0) {
+            player.giveExpLevels(-requiredLevels);
+        }
+        return new UnlockXpAttempt(UnlockXpResult.UNLOCKED, requiredLevels, player.getLevel());
+    }
+
+    public UnlockXpAttempt attemptUnlockEntryWithXp(Player player, String moduleId, String entryId) {
+        if (player == null) {
+            return new UnlockXpAttempt(UnlockXpResult.INVALID_INPUT, 0, 0);
+        }
+        if (!settings.isResearchEnabled()) {
+            return new UnlockXpAttempt(UnlockXpResult.RESEARCH_DISABLED, 0, player.getLevel());
+        }
+
+        String module = normalize(moduleId);
+        String entry = normalize(entryId);
+        if (module == null || entry == null) {
+            return new UnlockXpAttempt(UnlockXpResult.INVALID_INPUT, 0, player.getLevel());
+        }
+
+        int currentLevels = player.getLevel();
+        int requiredLevels = getEntryUnlockCostLevels(module, entry);
+        if (hasUnlocked(player.getUniqueId(), module, entry)) {
+            return new UnlockXpAttempt(UnlockXpResult.ALREADY_UNLOCKED, requiredLevels, currentLevels);
+        }
+
+        if (currentLevels < requiredLevels) {
+            return new UnlockXpAttempt(UnlockXpResult.INSUFFICIENT_LEVELS, requiredLevels, currentLevels);
+        }
+
+        boolean unlocked = unlockEntry(player.getUniqueId(), module, entry);
+        if (!unlocked) {
+            if (hasUnlocked(player.getUniqueId(), module, entry)) {
+                return new UnlockXpAttempt(UnlockXpResult.ALREADY_UNLOCKED, requiredLevels, currentLevels);
+            }
+            return new UnlockXpAttempt(UnlockXpResult.INVALID_INPUT, requiredLevels, currentLevels);
+        }
+
+        if (requiredLevels > 0) {
+            player.giveExpLevels(-requiredLevels);
+        }
+        return new UnlockXpAttempt(UnlockXpResult.UNLOCKED, requiredLevels, player.getLevel());
+    }
+
     public boolean lockEntry(Player player, String moduleId, String entryId) {
         if (player == null) {
             return false;
@@ -170,8 +249,27 @@ public class TechResearchService implements Listener {
         return Collections.unmodifiableSet(new HashSet<>(unlocked));
     }
 
+    public int getModuleUnlockCostLevels(String moduleId) {
+        String normalizedModule = normalize(moduleId);
+        if (normalizedModule == null) {
+            return settings.getResearchModuleUnlockCostLevels();
+        }
+        return Math.max(0, moduleUnlockCosts.getOrDefault(normalizedModule, settings.getResearchModuleUnlockCostLevels()));
+    }
+
+    public int getEntryUnlockCostLevels(String moduleId, String entryId) {
+        String module = normalize(moduleId);
+        String entry = normalize(entryId);
+        if (module == null || entry == null) {
+            return settings.getResearchEntryUnlockCostLevels();
+        }
+        String key = composeKey(module, entry);
+        return Math.max(0, entryUnlockCosts.getOrDefault(key, settings.getResearchEntryUnlockCostLevels()));
+    }
+
     private void load() {
         unlockedByPlayer.clear();
+        loadUnlockCosts();
 
         if (!dataFile.exists()) {
             return;
@@ -244,6 +342,56 @@ public class TechResearchService implements Listener {
         return defaults;
     }
 
+    private void loadUnlockCosts() {
+        moduleUnlockCosts.clear();
+        entryUnlockCosts.clear();
+
+        if (!contentFile.exists()) {
+            return;
+        }
+
+        YamlConfiguration content = YamlConfiguration.loadConfiguration(contentFile);
+
+        ConfigurationSection modulesSection = content.getConfigurationSection("modules");
+        if (modulesSection != null) {
+            for (String moduleIdRaw : modulesSection.getKeys(false)) {
+                ConfigurationSection moduleSection = modulesSection.getConfigurationSection(moduleIdRaw);
+                if (moduleSection == null) {
+                    continue;
+                }
+                String moduleId = normalize(moduleIdRaw);
+                if (moduleId == null) {
+                    continue;
+                }
+                int cost = Math.max(0, moduleSection.getInt(
+                        "unlock-cost-levels",
+                        settings.getResearchModuleUnlockCostLevels()));
+                moduleUnlockCosts.put(moduleId, cost);
+            }
+        }
+
+        ConfigurationSection entriesSection = content.getConfigurationSection("entries");
+        if (entriesSection != null) {
+            for (String entryIdRaw : entriesSection.getKeys(false)) {
+                ConfigurationSection entrySection = entriesSection.getConfigurationSection(entryIdRaw);
+                if (entrySection == null) {
+                    continue;
+                }
+
+                String moduleId = normalize(entrySection.getString("module"));
+                String entryId = normalize(entryIdRaw);
+                if (moduleId == null || entryId == null) {
+                    continue;
+                }
+
+                int cost = Math.max(0, entrySection.getInt(
+                        "unlock-cost-levels",
+                        settings.getResearchEntryUnlockCostLevels()));
+                entryUnlockCosts.put(composeKey(moduleId, entryId), cost);
+            }
+        }
+    }
+
     private String composeKey(String moduleId, String entryId) {
         return normalize(moduleId) + "|" + normalize(entryId);
     }
@@ -283,5 +431,16 @@ public class TechResearchService implements Listener {
             save();
             return defaults;
         });
+    }
+
+    public enum UnlockXpResult {
+        UNLOCKED,
+        ALREADY_UNLOCKED,
+        INSUFFICIENT_LEVELS,
+        INVALID_INPUT,
+        RESEARCH_DISABLED
+    }
+
+    public record UnlockXpAttempt(UnlockXpResult result, int requiredLevels, int currentLevels) {
     }
 }

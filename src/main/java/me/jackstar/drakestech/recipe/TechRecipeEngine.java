@@ -1,5 +1,6 @@
 package me.jackstar.drakestech.recipe;
 
+import me.jackstar.drakestech.item.TechItemRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -22,15 +24,20 @@ import java.util.Optional;
 
 public class TechRecipeEngine {
 
+    private static final String ITEM_PREFIX = "item:";
+    private static final String MATERIAL_PREFIX = "material:";
+
     private final JavaPlugin plugin;
+    private final TechItemRegistry itemRegistry;
     private final File contentFile;
 
     private final Map<Material, ItemStack> vanillaSmeltingRecipes = new EnumMap<>(Material.class);
-    private final Map<Material, ItemStack> customSmeltingRecipes = new EnumMap<>(Material.class);
+    private final Map<String, SmeltingOutput> customSmeltingRecipes = new HashMap<>();
     private boolean useVanillaFallback = true;
 
-    public TechRecipeEngine(JavaPlugin plugin) {
+    public TechRecipeEngine(JavaPlugin plugin, TechItemRegistry itemRegistry) {
         this.plugin = plugin;
+        this.itemRegistry = itemRegistry;
         this.contentFile = new File(plugin.getDataFolder(), "tech-content.yml");
         reload();
     }
@@ -52,9 +59,19 @@ public class TechRecipeEngine {
             return Optional.empty();
         }
 
-        ItemStack custom = customSmeltingRecipes.get(input.getType());
+        String inputKey = buildInputKey(input);
+        SmeltingOutput custom = customSmeltingRecipes.get(inputKey);
         if (custom != null) {
-            return Optional.of(custom.clone());
+            ItemStack resolved = custom.createItemStack(itemRegistry).orElse(null);
+            if (resolved == null || resolved.getType().isAir()) {
+                plugin.getLogger().warning("[Recipes] Custom output could not be resolved for key '" + inputKey + "'.");
+                return Optional.empty();
+            }
+            return Optional.of(resolved);
+        }
+
+        if (itemRegistry.readTechItemId(input).isPresent()) {
+            return Optional.empty();
         }
 
         if (!useVanillaFallback) {
@@ -128,49 +145,157 @@ public class TechRecipeEngine {
                 continue;
             }
 
-            List<Material> inputs = parseInputMaterials(recipeSection);
-            Material outputType = parseMaterial(recipeSection.getString("output"));
-            int amount = Math.max(1, recipeSection.getInt("amount", 1));
+            List<String> inputs = parseInputKeys(recipeSection);
+            SmeltingOutput output = parseOutput(recipeSection.getString("output"),
+                    Math.max(1, recipeSection.getInt("amount", 1)));
 
-            if (inputs.isEmpty() || outputType == null || outputType.isAir()) {
+            if (inputs.isEmpty() || output == null) {
                 plugin.getLogger().warning("[Recipes] Invalid custom smelting recipe '" + key + "'. Skipping.");
                 continue;
             }
 
-            ItemStack output = new ItemStack(outputType, amount);
-            for (Material input : inputs) {
-                customSmeltingRecipes.put(input, output.clone());
+            for (String inputKey : inputs) {
+                SmeltingOutput replaced = customSmeltingRecipes.put(inputKey, output);
+                if (replaced != null) {
+                    plugin.getLogger().warning("[Recipes] Replaced custom smelting rule for input '" + inputKey + "'.");
+                }
             }
         }
     }
 
-    private List<Material> parseInputMaterials(ConfigurationSection section) {
-        List<Material> materials = new ArrayList<>();
+    private List<String> parseInputKeys(ConfigurationSection section) {
+        List<String> keys = new ArrayList<>();
 
         String singleInput = section.getString("input");
-        if (singleInput != null && !singleInput.isBlank()) {
-            Material parsed = parseMaterial(singleInput);
-            if (parsed != null && !parsed.isAir()) {
-                materials.add(parsed);
-            }
+        String parsedSingle = parseInputToken(singleInput);
+        if (parsedSingle != null) {
+            keys.add(parsedSingle);
         }
 
         List<String> listInput = section.getStringList("inputs");
         for (String value : listInput) {
-            Material parsed = parseMaterial(value);
-            if (parsed != null && !parsed.isAir()) {
-                materials.add(parsed);
+            String parsed = parseInputToken(value);
+            if (parsed != null) {
+                keys.add(parsed);
             }
         }
+        return keys;
+    }
 
-        return materials;
+    private String parseInputToken(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+
+        String clean = raw.trim();
+        String lower = clean.toLowerCase(Locale.ROOT);
+        if (lower.startsWith(ITEM_PREFIX)) {
+            String itemId = normalize(clean.substring(ITEM_PREFIX.length()));
+            return itemId == null ? null : ITEM_PREFIX + itemId;
+        }
+        if (lower.startsWith(MATERIAL_PREFIX)) {
+            Material material = parseMaterial(clean.substring(MATERIAL_PREFIX.length()));
+            return material == null ? null : MATERIAL_PREFIX + material.name();
+        }
+
+        Material material = parseMaterial(clean);
+        if (material != null) {
+            return MATERIAL_PREFIX + material.name();
+        }
+
+        String itemId = normalize(clean);
+        if (itemId != null && itemRegistry.find(itemId).isPresent()) {
+            return ITEM_PREFIX + itemId;
+        }
+
+        return null;
+    }
+
+    private SmeltingOutput parseOutput(String rawOutput, int amount) {
+        if (rawOutput == null || rawOutput.isBlank()) {
+            return null;
+        }
+
+        String clean = rawOutput.trim();
+        String lower = clean.toLowerCase(Locale.ROOT);
+        if (lower.startsWith(ITEM_PREFIX)) {
+            String itemId = normalize(clean.substring(ITEM_PREFIX.length()));
+            if (itemId == null) {
+                return null;
+            }
+            return SmeltingOutput.customItem(itemId, amount);
+        }
+        if (lower.startsWith(MATERIAL_PREFIX)) {
+            Material material = parseMaterial(clean.substring(MATERIAL_PREFIX.length()));
+            if (material == null || material.isAir()) {
+                return null;
+            }
+            return SmeltingOutput.vanilla(material, amount);
+        }
+
+        Material material = parseMaterial(clean);
+        if (material != null && !material.isAir()) {
+            return SmeltingOutput.vanilla(material, amount);
+        }
+
+        String itemId = normalize(clean);
+        if (itemId != null && itemRegistry.find(itemId).isPresent()) {
+            return SmeltingOutput.customItem(itemId, amount);
+        }
+
+        return null;
+    }
+
+    private String buildInputKey(ItemStack input) {
+        Optional<String> customId = itemRegistry.readTechItemId(input);
+        if (customId.isPresent()) {
+            return ITEM_PREFIX + customId.get();
+        }
+        return MATERIAL_PREFIX + input.getType().name();
     }
 
     private Material parseMaterial(String raw) {
         if (raw == null || raw.isBlank()) {
             return null;
         }
+        String clean = raw.trim();
+        try {
+            return Material.valueOf(clean.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
+            return Material.matchMaterial(clean);
+        }
+    }
 
-        return Material.matchMaterial(raw.trim().toUpperCase(Locale.ROOT), true);
+    private String normalize(String value) {
+        if (value == null) {
+            return null;
+        }
+        String normalized = value.trim().toLowerCase(Locale.ROOT);
+        return normalized.isEmpty() ? null : normalized;
+    }
+
+    private record SmeltingOutput(OutputType type, String customItemId, Material material, int amount) {
+        static SmeltingOutput customItem(String customItemId, int amount) {
+            return new SmeltingOutput(OutputType.CUSTOM_ITEM, customItemId, null, Math.max(1, amount));
+        }
+
+        static SmeltingOutput vanilla(Material material, int amount) {
+            return new SmeltingOutput(OutputType.VANILLA, null, material, Math.max(1, amount));
+        }
+
+        Optional<ItemStack> createItemStack(TechItemRegistry itemRegistry) {
+            if (type == OutputType.CUSTOM_ITEM) {
+                return itemRegistry.createItem(customItemId, amount);
+            }
+            if (material == null || material.isAir()) {
+                return Optional.empty();
+            }
+            return Optional.of(new ItemStack(material, amount));
+        }
+    }
+
+    private enum OutputType {
+        CUSTOM_ITEM,
+        VANILLA
     }
 }

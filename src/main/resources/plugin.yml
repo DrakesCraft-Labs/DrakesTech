@@ -8,7 +8,7 @@ softdepend: [PlaceholderAPI, Vault]
 commands:
   drakestech:
     description: Admin command for DrakesTech
-    usage: /drakestech <give|guide|search|research|list|diagnostics|reload> (list supports addons)
+    usage: /drakestech <give|guide|search|research|list|diagnostics|reload>
     permission: drakestech.admin
 permissions:
   drakestech.admin:
