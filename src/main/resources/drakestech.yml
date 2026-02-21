@@ -82,3 +82,89 @@ network:
     # Max items an Export Bus can extract from the network per cycle.
     # [DANGER] Very high values can create burst throughput spikes.
     max-items-per-cycle: 64
+
+tools:
+  # Master switch for advanced tools (drills + impact charge).
+  enabled: true
+
+  drills:
+    mk1:
+      # Enable Drill MK-I 3x3 behavior.
+      enabled: true
+
+      # Tech item ID used as MK-I drill.
+      # [DANGER] If this does not match a registered item, the tool will not work.
+      item-id: drill_mk1_3x3
+
+      # Hard cap to avoid huge accidental break loops.
+      # Recommended: 27-81.
+      max-blocks-per-use: 64
+
+      energy:
+        # Fuel item consumed to power the drill.
+        fuel-item-id: power_core_t1
+
+        # How many virtual energy units each fuel item provides.
+        fuel-units-per-item: 40
+
+        # Energy cost for each block broken by the AOE drill mode.
+        units-per-block: 4
+
+    mk2:
+      # Enable Drill MK-II 5x5 behavior.
+      enabled: true
+
+      # Tech item ID used as MK-II drill.
+      # [DANGER] Keep synchronized with recipe/output IDs.
+      item-id: drill_mk2_5x5
+
+      # Hard cap to avoid extreme server load from a single break event.
+      # [DANGER] Raising this too much can spike TPS loss in dense zones.
+      max-blocks-per-use: 128
+
+      energy:
+        # Fuel item consumed to power the MK-II.
+        fuel-item-id: power_core_t2
+
+        # Virtual energy units provided per fuel item.
+        fuel-units-per-item: 80
+
+        # Energy consumed per broken block.
+        units-per-block: 7
+
+  impact-charge:
+    # Enable controlled explosive mining charge.
+    enabled: true
+
+    # Tech item ID used for the impact charge.
+    item-id: impact_charge
+
+    # Cooldown after each activation (in ticks).
+    # Recommended: 20-80.
+    cooldown-ticks: 40
+
+    # Knockback/damage visual explosion yield.
+    # [DANGER] This does not break terrain directly, but high values can still be abusive in PvP.
+    damage-explosion-yield: 1.75
+
+    energy:
+      # Fuel consumed from inventory per use.
+      fuel-item-id: power_core_t2
+
+      # Virtual energy units provided per fuel item.
+      fuel-units-per-item: 80
+
+      # Energy cost per impact charge use.
+      units-per-use: 35
+
+    break:
+      # Block break radius for controlled impact mining.
+      # Recommended: 2.5-4.0.
+      radius: 3.5
+
+      # [DANGER] Hard cap of blocks to break in one detonation.
+      max-blocks: 120
+
+      # If true, impact charge can also break container blocks (chests, barrels, etc).
+      # [DANGER] No tocar a menos que sepas lo que haces.
+      containers: false

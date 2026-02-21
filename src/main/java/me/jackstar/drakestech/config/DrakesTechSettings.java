@@ -35,6 +35,29 @@ public class DrakesTechSettings {
     private int networkCycleIntervalTicks = 10;
     private int networkMaxNodesPerNetwork = 1024;
     private int networkExportMaxItemsPerCycle = 64;
+    private boolean toolsEnabled = true;
+    private boolean drillMk1Enabled = true;
+    private String drillMk1ItemId = "drill_mk1_3x3";
+    private String drillMk1FuelItemId = "power_core_t1";
+    private int drillMk1FuelUnitsPerItem = 40;
+    private int drillMk1EnergyPerBlock = 4;
+    private int drillMk1MaxBlocksPerUse = 64;
+    private boolean drillMk2Enabled = true;
+    private String drillMk2ItemId = "drill_mk2_5x5";
+    private String drillMk2FuelItemId = "power_core_t2";
+    private int drillMk2FuelUnitsPerItem = 80;
+    private int drillMk2EnergyPerBlock = 7;
+    private int drillMk2MaxBlocksPerUse = 128;
+    private boolean impactChargeEnabled = true;
+    private String impactChargeItemId = "impact_charge";
+    private String impactChargeFuelItemId = "power_core_t2";
+    private int impactChargeFuelUnitsPerItem = 80;
+    private int impactChargeEnergyPerUse = 35;
+    private double impactChargeRadius = 3.5D;
+    private int impactChargeMaxBlocks = 120;
+    private int impactChargeCooldownTicks = 40;
+    private float impactChargeDamageExplosionYield = 1.75F;
+    private boolean impactChargeBreakContainers = false;
 
     public DrakesTechSettings(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -75,6 +98,33 @@ public class DrakesTechSettings {
         networkCycleIntervalTicks = Math.max(1, config.getInt("network.cycle-interval-ticks", 10));
         networkMaxNodesPerNetwork = Math.max(8, config.getInt("network.max-nodes-per-network", 1024));
         networkExportMaxItemsPerCycle = Math.max(1, config.getInt("network.export.max-items-per-cycle", 64));
+
+        toolsEnabled = config.getBoolean("tools.enabled", true);
+
+        drillMk1Enabled = config.getBoolean("tools.drills.mk1.enabled", true);
+        drillMk1ItemId = normalizeId(config.getString("tools.drills.mk1.item-id"), "drill_mk1_3x3");
+        drillMk1FuelItemId = normalizeId(config.getString("tools.drills.mk1.energy.fuel-item-id"), "power_core_t1");
+        drillMk1FuelUnitsPerItem = Math.max(1, config.getInt("tools.drills.mk1.energy.fuel-units-per-item", 40));
+        drillMk1EnergyPerBlock = Math.max(1, config.getInt("tools.drills.mk1.energy.units-per-block", 4));
+        drillMk1MaxBlocksPerUse = Math.max(1, config.getInt("tools.drills.mk1.max-blocks-per-use", 64));
+
+        drillMk2Enabled = config.getBoolean("tools.drills.mk2.enabled", true);
+        drillMk2ItemId = normalizeId(config.getString("tools.drills.mk2.item-id"), "drill_mk2_5x5");
+        drillMk2FuelItemId = normalizeId(config.getString("tools.drills.mk2.energy.fuel-item-id"), "power_core_t2");
+        drillMk2FuelUnitsPerItem = Math.max(1, config.getInt("tools.drills.mk2.energy.fuel-units-per-item", 80));
+        drillMk2EnergyPerBlock = Math.max(1, config.getInt("tools.drills.mk2.energy.units-per-block", 7));
+        drillMk2MaxBlocksPerUse = Math.max(1, config.getInt("tools.drills.mk2.max-blocks-per-use", 128));
+
+        impactChargeEnabled = config.getBoolean("tools.impact-charge.enabled", true);
+        impactChargeItemId = normalizeId(config.getString("tools.impact-charge.item-id"), "impact_charge");
+        impactChargeFuelItemId = normalizeId(config.getString("tools.impact-charge.energy.fuel-item-id"), "power_core_t2");
+        impactChargeFuelUnitsPerItem = Math.max(1, config.getInt("tools.impact-charge.energy.fuel-units-per-item", 80));
+        impactChargeEnergyPerUse = Math.max(1, config.getInt("tools.impact-charge.energy.units-per-use", 35));
+        impactChargeRadius = Math.max(1.0D, config.getDouble("tools.impact-charge.break.radius", 3.5D));
+        impactChargeMaxBlocks = Math.max(1, config.getInt("tools.impact-charge.break.max-blocks", 120));
+        impactChargeCooldownTicks = Math.max(0, config.getInt("tools.impact-charge.cooldown-ticks", 40));
+        impactChargeDamageExplosionYield = Math.max(0.0F, (float) config.getDouble("tools.impact-charge.damage-explosion-yield", 1.75D));
+        impactChargeBreakContainers = config.getBoolean("tools.impact-charge.break.containers", false);
     }
 
     public boolean isAutoGiveGuideOnFirstJoin() {
@@ -153,6 +203,98 @@ public class DrakesTechSettings {
         return networkExportMaxItemsPerCycle;
     }
 
+    public boolean isToolsEnabled() {
+        return toolsEnabled;
+    }
+
+    public boolean isDrillMk1Enabled() {
+        return drillMk1Enabled;
+    }
+
+    public String getDrillMk1ItemId() {
+        return drillMk1ItemId;
+    }
+
+    public String getDrillMk1FuelItemId() {
+        return drillMk1FuelItemId;
+    }
+
+    public int getDrillMk1FuelUnitsPerItem() {
+        return drillMk1FuelUnitsPerItem;
+    }
+
+    public int getDrillMk1EnergyPerBlock() {
+        return drillMk1EnergyPerBlock;
+    }
+
+    public int getDrillMk1MaxBlocksPerUse() {
+        return drillMk1MaxBlocksPerUse;
+    }
+
+    public boolean isDrillMk2Enabled() {
+        return drillMk2Enabled;
+    }
+
+    public String getDrillMk2ItemId() {
+        return drillMk2ItemId;
+    }
+
+    public String getDrillMk2FuelItemId() {
+        return drillMk2FuelItemId;
+    }
+
+    public int getDrillMk2FuelUnitsPerItem() {
+        return drillMk2FuelUnitsPerItem;
+    }
+
+    public int getDrillMk2EnergyPerBlock() {
+        return drillMk2EnergyPerBlock;
+    }
+
+    public int getDrillMk2MaxBlocksPerUse() {
+        return drillMk2MaxBlocksPerUse;
+    }
+
+    public boolean isImpactChargeEnabled() {
+        return impactChargeEnabled;
+    }
+
+    public String getImpactChargeItemId() {
+        return impactChargeItemId;
+    }
+
+    public String getImpactChargeFuelItemId() {
+        return impactChargeFuelItemId;
+    }
+
+    public int getImpactChargeFuelUnitsPerItem() {
+        return impactChargeFuelUnitsPerItem;
+    }
+
+    public int getImpactChargeEnergyPerUse() {
+        return impactChargeEnergyPerUse;
+    }
+
+    public double getImpactChargeRadius() {
+        return impactChargeRadius;
+    }
+
+    public int getImpactChargeMaxBlocks() {
+        return impactChargeMaxBlocks;
+    }
+
+    public int getImpactChargeCooldownTicks() {
+        return impactChargeCooldownTicks;
+    }
+
+    public float getImpactChargeDamageExplosionYield() {
+        return impactChargeDamageExplosionYield;
+    }
+
+    public boolean isImpactChargeBreakContainers() {
+        return impactChargeBreakContainers;
+    }
+
     private void saveDefault() {
         if (!file.exists() && plugin.getResource("drakestech.yml") != null) {
             plugin.saveResource("drakestech.yml", false);
@@ -198,5 +340,13 @@ public class DrakesTechSettings {
             }
         }
         return List.copyOf(normalized);
+    }
+
+    private String normalizeId(String value, String fallback) {
+        String normalized = value == null ? null : value.trim().toLowerCase(Locale.ROOT);
+        if (normalized == null || normalized.isEmpty()) {
+            return fallback;
+        }
+        return normalized;
     }
 }

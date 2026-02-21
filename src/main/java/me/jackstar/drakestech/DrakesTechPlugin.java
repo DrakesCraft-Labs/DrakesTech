@@ -17,6 +17,7 @@ import me.jackstar.drakestech.nbt.PdcNbtItemHandler;
 import me.jackstar.drakestech.recipe.TechCraftingRecipeService;
 import me.jackstar.drakestech.recipe.TechRecipeEngine;
 import me.jackstar.drakestech.research.TechResearchService;
+import me.jackstar.drakestech.tools.TechToolService;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
@@ -47,6 +48,7 @@ public class DrakesTechPlugin extends JavaPlugin {
     private TechResearchService researchService;
     private MultiblockService multiblockService;
     private NbtItemHandler nbtItemHandler;
+    private TechToolService toolService;
 
     @Override
     public void onEnable() {
@@ -89,6 +91,8 @@ public class DrakesTechPlugin extends JavaPlugin {
         machineManager.start();
         multiblockService = new MultiblockService(this, machineFactory, machineManager);
         multiblockService.reload();
+        toolService = new TechToolService(this, apiService, settings, itemRegistry, machineManager);
+        toolService.start();
 
         logLoading("Starting addon lifecycle manager");
         addonLifecycleManager = new DrakesTechAddonLifecycleManager(this, apiService, machineManager);
@@ -113,6 +117,7 @@ public class DrakesTechPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DrakesTechBlockListener(machineManager, machineFactory, multiblockService), this);
         getServer().getPluginManager().registerEvents(guideManager, this);
         getServer().getPluginManager().registerEvents(researchService, this);
+        getServer().getPluginManager().registerEvents(toolService, this);
 
         getLogger().info("[Ready] DrakesTech enabled.");
     }
@@ -130,6 +135,9 @@ public class DrakesTechPlugin extends JavaPlugin {
 
         if (machineManager != null) {
             machineManager.stop();
+        }
+        if (toolService != null) {
+            toolService.stop();
         }
         if (researchService != null) {
             researchService.stop();
@@ -159,6 +167,9 @@ public class DrakesTechPlugin extends JavaPlugin {
         }
         if (machineManager != null) {
             machineManager.reloadMachinesFromDisk();
+        }
+        if (toolService != null) {
+            toolService.reload();
         }
         if (multiblockService != null) {
             multiblockService.reload();
