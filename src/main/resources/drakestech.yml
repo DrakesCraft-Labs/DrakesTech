@@ -65,3 +65,20 @@ automation:
     # If true, Tech Storage Chest accepts only DrakesTech items and machine items.
     # If false, it can store vanilla and any other plugin items too.
     only-plugin-items: true
+
+network:
+  # Master switch for DrakesTech machine networks (controller + bridges + buses).
+  enabled: true
+
+  # Ticks between network cycles (topology + import/export processing).
+  # Recommended: 5-20. Lower values increase throughput but use more CPU.
+  cycle-interval-ticks: 10
+
+  # [DANGER] Upper bound of machine nodes per single network graph.
+  # High values may increase traversal cost if players build huge setups.
+  max-nodes-per-network: 1024
+
+  export:
+    # Max items an Export Bus can extract from the network per cycle.
+    # [DANGER] Very high values can create burst throughput spikes.
+    max-items-per-cycle: 64

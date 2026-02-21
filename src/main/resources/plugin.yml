@@ -4,7 +4,7 @@ main: me.jackstar.drakestech.DrakesTechPlugin
 api-version: '1.20'
 authors: [JackStar]
 description: Tech machines and energy system for DrakesCraft
-softdepend: [PlaceholderAPI, Vault]
+softdepend: [PlaceholderAPI, Vault, Slimefun]
 commands:
   drakestech:
     description: Admin command for DrakesTech

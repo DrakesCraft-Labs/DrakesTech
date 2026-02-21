@@ -31,6 +31,10 @@ public class DrakesTechSettings {
     private int automationItemTransferIntervalTicks = 10;
     private int automationItemTransferMaxItemsPerMove = 8;
     private boolean techStorageOnlyPluginItems = true;
+    private boolean networkEnabled = true;
+    private int networkCycleIntervalTicks = 10;
+    private int networkMaxNodesPerNetwork = 1024;
+    private int networkExportMaxItemsPerCycle = 64;
 
     public DrakesTechSettings(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -66,6 +70,11 @@ public class DrakesTechSettings {
         automationItemTransferIntervalTicks = Math.max(1, config.getInt("automation.item-transfer.interval-ticks", 10));
         automationItemTransferMaxItemsPerMove = Math.max(1, config.getInt("automation.item-transfer.max-items-per-move", 8));
         techStorageOnlyPluginItems = config.getBoolean("automation.tech-storage.only-plugin-items", true);
+
+        networkEnabled = config.getBoolean("network.enabled", true);
+        networkCycleIntervalTicks = Math.max(1, config.getInt("network.cycle-interval-ticks", 10));
+        networkMaxNodesPerNetwork = Math.max(8, config.getInt("network.max-nodes-per-network", 1024));
+        networkExportMaxItemsPerCycle = Math.max(1, config.getInt("network.export.max-items-per-cycle", 64));
     }
 
     public boolean isAutoGiveGuideOnFirstJoin() {
@@ -126,6 +135,22 @@ public class DrakesTechSettings {
 
     public boolean isTechStorageOnlyPluginItems() {
         return techStorageOnlyPluginItems;
+    }
+
+    public boolean isNetworkEnabled() {
+        return networkEnabled;
+    }
+
+    public int getNetworkCycleIntervalTicks() {
+        return networkCycleIntervalTicks;
+    }
+
+    public int getNetworkMaxNodesPerNetwork() {
+        return networkMaxNodesPerNetwork;
+    }
+
+    public int getNetworkExportMaxItemsPerCycle() {
+        return networkExportMaxItemsPerCycle;
     }
 
     private void saveDefault() {

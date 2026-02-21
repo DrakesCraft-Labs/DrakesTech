@@ -9,6 +9,11 @@ import me.jackstar.drakestech.api.item.TechItemDefinition;
 import me.jackstar.drakestech.api.machine.MachineDefinition;
 import me.jackstar.drakestech.config.DrakesTechSettings;
 import me.jackstar.drakestech.machines.impl.ElectricFurnace;
+import me.jackstar.drakestech.machines.impl.NetworkBridgeMachine;
+import me.jackstar.drakestech.machines.impl.NetworkControllerMachine;
+import me.jackstar.drakestech.machines.impl.NetworkExportBusMachine;
+import me.jackstar.drakestech.machines.impl.NetworkImportBusMachine;
+import me.jackstar.drakestech.machines.impl.NetworkStorageBusMachine;
 import me.jackstar.drakestech.machines.impl.ResourceGeneratorMachine;
 import me.jackstar.drakestech.machines.impl.SolarGenerator;
 import me.jackstar.drakestech.machines.impl.TechStorageChestMachine;
@@ -44,6 +49,7 @@ public final class BuiltinTechContentLoader {
         registerModules(plugin, api, config.getConfigurationSection("modules"));
         registerEnchantments(plugin, api, config.getConfigurationSection("enchantments"));
         registerMachines(plugin, api, recipeEngine, nbtItemHandler, settings, config.getConfigurationSection("machines"));
+        registerNetworkFallbackMachines(plugin, api, settings);
         registerGuideEntries(plugin, api, config.getConfigurationSection("entries"));
         registerEnchantmentGuideEntries(plugin, api, config.getBoolean("guide.auto-create-enchantment-entries", true));
     }
@@ -148,6 +154,50 @@ public final class BuiltinTechContentLoader {
                                 Math.max(9, machineSection.getInt("inventory-size", 54)),
                                 nbtItemHandler,
                                 machineSection.getBoolean("only-plugin-items", settings.isTechStorageOnlyPluginItems())));
+                case "network_controller" -> new MachineDefinition(
+                        id,
+                        moduleId,
+                        displayName,
+                        description,
+                        recipe,
+                        machineItem,
+                        NetworkControllerMachine::new);
+                case "network_bridge" -> new MachineDefinition(
+                        id,
+                        moduleId,
+                        displayName,
+                        description,
+                        recipe,
+                        machineItem,
+                        NetworkBridgeMachine::new);
+                case "network_import_bus" -> new MachineDefinition(
+                        id,
+                        moduleId,
+                        displayName,
+                        description,
+                        recipe,
+                        machineItem,
+                        NetworkImportBusMachine::new);
+                case "network_export_bus" -> new MachineDefinition(
+                        id,
+                        moduleId,
+                        displayName,
+                        description,
+                        recipe,
+                        machineItem,
+                        location -> new NetworkExportBusMachine(
+                                location,
+                                Math.max(1,
+                                        machineSection.getInt("max-items-per-cycle",
+                                                settings.getNetworkExportMaxItemsPerCycle()))));
+                case "network_storage_bus" -> new MachineDefinition(
+                        id,
+                        moduleId,
+                        displayName,
+                        description,
+                        recipe,
+                        machineItem,
+                        NetworkStorageBusMachine::new);
                 default -> null;
             };
 
@@ -292,6 +342,86 @@ public final class BuiltinTechContentLoader {
                             .build());
 
             api.registerGuideEntry(plugin, entry);
+        }
+    }
+
+    private static void registerNetworkFallbackMachines(JavaPlugin plugin, DrakesTechApi api, DrakesTechSettings settings) {
+        registerFallbackMachine(plugin, api,
+                "network_controller",
+                "machines",
+                "<gold><b>Network Controller</b></gold>",
+                Material.LODESTONE,
+                List.of("<gray>Core block that creates a DrakesTech network graph.</gray>"),
+                List.of("<gray>Place this first to start a machine network.</gray>"),
+                NetworkControllerMachine::new);
+
+        registerFallbackMachine(plugin, api,
+                "network_bridge",
+                "machines",
+                "<yellow><b>Network Bridge</b></yellow>",
+                Material.CHAIN,
+                List.of("<gray>Extends network reach between nodes.</gray>"),
+                List.of("<gray>Use as low-cost connector between buses and storage.</gray>"),
+                NetworkBridgeMachine::new);
+
+        registerFallbackMachine(plugin, api,
+                "network_import_bus",
+                "machines",
+                "<green><b>Network Import Bus</b></green>",
+                Material.HOPPER,
+                List.of("<gray>Imports items from local bus inventory into the network.</gray>"),
+                List.of("<gray>Feed this bus using item transport or manual insertion.</gray>"),
+                NetworkImportBusMachine::new);
+
+        registerFallbackMachine(plugin, api,
+                "network_export_bus",
+                "machines",
+                "<aqua><b>Network Export Bus</b></aqua>",
+                Material.DROPPER,
+                List.of("<gray>Template-based item export from the network.</gray>"),
+                List.of("<gray>Put template in slot 1, output appears in slot 2.</gray>"),
+                location -> new NetworkExportBusMachine(location, settings.getNetworkExportMaxItemsPerCycle()));
+
+        registerFallbackMachine(plugin, api,
+                "network_storage_bus",
+                "machines",
+                "<light_purple><b>Network Storage Bus</b></light_purple>",
+                Material.OBSERVER,
+                List.of("<gray>Exposes one adjacent vanilla inventory to the network.</gray>"),
+                List.of("<gray>Place adjacent to chest/barrel/shulker container.</gray>"),
+                NetworkStorageBusMachine::new);
+    }
+
+    private static void registerFallbackMachine(JavaPlugin plugin,
+            DrakesTechApi api,
+            String id,
+            String moduleId,
+            String displayName,
+            Material icon,
+            List<String> description,
+            List<String> recipeLines,
+            me.jackstar.drakestech.api.machine.MachineSupplier supplier) {
+        if (api.findMachine(id).isPresent()) {
+            return;
+        }
+
+        ItemStack machineItem = new ItemBuilder(icon)
+                .name(displayName)
+                .lore(description)
+                .build();
+
+        MachineDefinition definition = new MachineDefinition(
+                id,
+                moduleId,
+                displayName,
+                description,
+                recipeLines,
+                machineItem,
+                supplier);
+
+        boolean ok = api.registerMachine(plugin, definition);
+        if (!ok) {
+            plugin.getLogger().warning("Failed to register fallback machine '" + id + "'.");
         }
     }
 

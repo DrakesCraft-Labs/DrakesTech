@@ -21,11 +21,20 @@ Ser el motor de progresion tech de DrakesCraft: maquinas, energia, automatizacio
 - `iron_generator` (vanilla)
 - `redstone_generator` (vanilla)
 - `tech_storage_chest` (cofre enlazable a maquinas)
+- `network_controller`
+- `network_bridge`
+- `network_import_bus`
+- `network_export_bus`
+- `network_storage_bus`
 
 ### Automatizacion
 - Generadores de recursos vanilla con consumo energetico.
 - Cofre de almacenamiento tech conectado por adyacencia a maquinas.
 - Filtro configurable para que el cofre acepte solo items de DrakesTech o cualquier item.
+- Red de nodos con topologia por adyacencia (controller + bridges + buses).
+- Import bus: inserta items del bus al storage de red.
+- Export bus: retira por template desde la red.
+- Storage bus: expone inventario vanilla adyacente a la red.
 
 ### Guia / UX
 - Libro `DrakesTech Guide` con modulos, busqueda y detalle de recetas.
@@ -57,6 +66,7 @@ Ser el motor de progresion tech de DrakesCraft: maquinas, energia, automatizacio
   - research
   - transferencia de items
   - comportamiento de Tech Storage Chest
+  - settings de red (`network.*`)
 - `src/main/resources/tech-content.yml`
   - items, recipes, modules, machines, entries
 
@@ -74,5 +84,9 @@ python .\tools\content-gen\generate_massive_tech_content.py
 ## Dependencias
 - Paper 1.20.6+
 - Java 21
+- Slimefun (opcional, para coexistencia/bridge)
 - PlaceholderAPI (opcional)
 - Vault (opcional)
+
+## Compatibilidad Slimefun
+- Plan tecnico: `SLIMEFUN_COMPAT_PLAN.md`

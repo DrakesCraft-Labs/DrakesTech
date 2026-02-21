@@ -5,6 +5,7 @@ import me.jackstar.drakestech.energy.EnergyNode;
 import me.jackstar.drakestech.machines.AbstractMachine;
 import me.jackstar.drakestech.machines.ItemTransportNode;
 import me.jackstar.drakestech.machines.factory.MachineFactory;
+import me.jackstar.drakestech.network.TechNetworkService;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -31,16 +32,19 @@ public class MachineManager {
     private final JavaPlugin plugin;
     private final MachineFactory machineFactory;
     private final DrakesTechSettings settings;
+    private final TechNetworkService networkService;
     private final Map<Location, AbstractMachine> machines = new ConcurrentHashMap<>();
     private final File dataFile;
     private BukkitTask tickTask;
     private long ticksSinceLastSave;
     private long ticksSinceItemTransfer;
+    private long ticksSinceNetworkCycle;
 
     public MachineManager(JavaPlugin plugin, MachineFactory machineFactory, DrakesTechSettings settings) {
         this.plugin = plugin;
         this.machineFactory = machineFactory;
         this.settings = settings;
+        this.networkService = new TechNetworkService(settings);
         this.dataFile = new File(plugin.getDataFolder(), "drakestech-machines.yml");
     }
 
@@ -53,6 +57,13 @@ public class MachineManager {
         tickTask = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             tickMachines();
             transferEnergyAdjacent();
+            if (settings.isNetworkEnabled()) {
+                ticksSinceNetworkCycle++;
+                if (ticksSinceNetworkCycle >= settings.getNetworkCycleIntervalTicks()) {
+                    networkService.tick(machines.values());
+                    ticksSinceNetworkCycle = 0L;
+                }
+            }
             if (settings.isAutomationItemTransferEnabled()) {
                 ticksSinceItemTransfer++;
                 if (ticksSinceItemTransfer >= settings.getAutomationItemTransferIntervalTicks()) {
@@ -73,11 +84,13 @@ public class MachineManager {
             tickTask.cancel();
             tickTask = null;
         }
+        networkService.clear();
         saveMachines();
     }
 
     public void reloadMachinesFromDisk() {
         loadMachines();
+        networkService.clear();
         ticksSinceLastSave = 0L;
     }
 
@@ -115,6 +128,10 @@ public class MachineManager {
 
     public Collection<AbstractMachine> getMachines() {
         return Collections.unmodifiableCollection(machines.values());
+    }
+
+    public TechNetworkService getNetworkService() {
+        return networkService;
     }
 
     private void tickMachines() {

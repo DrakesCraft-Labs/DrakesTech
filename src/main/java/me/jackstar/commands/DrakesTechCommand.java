@@ -10,6 +10,7 @@ import me.jackstar.drakestech.api.item.TechItemDefinition;
 import me.jackstar.drakestech.api.machine.MachineDefinition;
 import me.jackstar.drakestech.manager.MachineManager;
 import me.jackstar.drakestech.machines.factory.MachineFactory;
+import me.jackstar.drakestech.network.TechNetworkService;
 import me.jackstar.drakestech.recipe.TechCraftingRecipeService;
 import me.jackstar.drakestech.recipe.TechRecipeEngine;
 import me.jackstar.drakestech.research.TechResearchService;
@@ -277,6 +278,7 @@ public class DrakesTechCommand implements TabExecutor {
         int items = api.getTechItems().size();
         List<String> addons = plugin.getLoadedAddons();
         TechRecipeEngine recipeEngine = plugin.getRecipeEngine();
+        TechNetworkService networkService = machineManager.getNetworkService();
 
         MessageUtils.send(sender, "<yellow>DrakesTech diagnostics:</yellow>");
         MessageUtils.send(sender, "<gray>Machine types:</gray> <aqua>" + registeredMachineTypes + "</aqua>");
@@ -285,6 +287,8 @@ public class DrakesTechCommand implements TabExecutor {
         MessageUtils.send(sender, "<gray>Guide entries:</gray> <aqua>" + guideEntries + "</aqua>");
         MessageUtils.send(sender, "<gray>Enchantments:</gray> <aqua>" + enchantments + "</aqua>");
         MessageUtils.send(sender, "<gray>Tech items:</gray> <aqua>" + items + "</aqua>");
+        MessageUtils.send(sender, "<gray>Active networks:</gray> <aqua>" + networkService.getNetworkCount() + "</aqua>");
+        MessageUtils.send(sender, "<gray>Network mapped nodes:</gray> <aqua>" + networkService.getMappedNodeCount() + "</aqua>");
         MessageUtils.send(sender, "<gray>Research enabled:</gray> <aqua>" + researchService.isEnabled() + "</aqua>");
         if (recipeEngine != null) {
             MessageUtils.send(sender, "<gray>Custom smelting recipes:</gray> <aqua>" + recipeEngine.getCustomSmeltingRecipeCount() + "</aqua>");

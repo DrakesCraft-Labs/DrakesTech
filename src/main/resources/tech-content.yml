@@ -23773,6 +23773,72 @@ machines:
       - '<gray>Middle row:</gray> <yellow>item:redstone_alloy_ingot_t1 | item:power_core_t1 | item:redstone_alloy_ingot_t1</yellow>'
       - '<gray>Bottom row:</gray> <yellow>item:copper_wire_t1 | Hopper | item:copper_wire_t1</yellow>'
 
+  network_controller:
+    enabled: true
+    template: network_controller
+    module: machines
+    display-name: '<gold><b>Network Controller</b></gold>'
+    icon: LODESTONE
+    description:
+      - '<gray>Core block that owns a DrakesTech item network.</gray>'
+    recipe:
+      - '<gray>Top row:</gray> <yellow>item:hardened_metal_t2 | item:power_core_t2 | item:hardened_metal_t2</yellow>'
+      - '<gray>Middle row:</gray> <yellow>item:copper_wire_t2 | Lodestone | item:copper_wire_t2</yellow>'
+      - '<gray>Bottom row:</gray> <yellow>item:redstone_alloy_ingot_t2 | item:tech_storage_chest | item:redstone_alloy_ingot_t2</yellow>'
+
+  network_bridge:
+    enabled: true
+    template: network_bridge
+    module: machines
+    display-name: '<yellow><b>Network Bridge</b></yellow>'
+    icon: CHAIN
+    description:
+      - '<gray>Extends network topology between machine nodes.</gray>'
+    recipe:
+      - '<gray>Top row:</gray> <yellow>- | item:copper_wire_t1 | -</yellow>'
+      - '<gray>Middle row:</gray> <yellow>item:copper_wire_t1 | Chain | item:copper_wire_t1</yellow>'
+      - '<gray>Bottom row:</gray> <yellow>- | item:copper_wire_t1 | -</yellow>'
+
+  network_import_bus:
+    enabled: true
+    template: network_import_bus
+    module: machines
+    display-name: '<green><b>Network Import Bus</b></green>'
+    icon: HOPPER
+    description:
+      - '<gray>Moves items from its slots into connected network storage.</gray>'
+    recipe:
+      - '<gray>Top row:</gray> <yellow>item:network_bridge | Hopper | item:network_bridge</yellow>'
+      - '<gray>Middle row:</gray> <yellow>item:copper_wire_t1 | item:power_core_t1 | item:copper_wire_t1</yellow>'
+      - '<gray>Bottom row:</gray> <yellow>- | Chest | -</yellow>'
+
+  network_export_bus:
+    enabled: true
+    template: network_export_bus
+    module: machines
+    display-name: '<aqua><b>Network Export Bus</b></aqua>'
+    icon: DROPPER
+    max-items-per-cycle: 64
+    description:
+      - '<gray>Uses template slot to pull matching items from the network.</gray>'
+    recipe:
+      - '<gray>Top row:</gray> <yellow>item:network_bridge | Dropper | item:network_bridge</yellow>'
+      - '<gray>Middle row:</gray> <yellow>item:copper_wire_t1 | item:power_core_t1 | item:copper_wire_t1</yellow>'
+      - '<gray>Bottom row:</gray> <yellow>- | Barrel | -</yellow>'
+
+  network_storage_bus:
+    enabled: true
+    template: network_storage_bus
+    module: machines
+    display-name: '<light_purple><b>Network Storage Bus</b></light_purple>'
+    icon: OBSERVER
+    description:
+      - '<gray>Exposes one adjacent vanilla inventory to the network.</gray>'
+    recipe:
+      - '<gray>Top row:</gray> <yellow>item:network_bridge | Observer | item:network_bridge</yellow>'
+      - '<gray>Middle row:</gray> <yellow>item:copper_wire_t1 | item:power_core_t1 | item:copper_wire_t1</yellow>'
+      - '<gray>Bottom row:</gray> <yellow>- | Chest | -</yellow>'
+
 multiblocks:
   # [DANGER] machine-id must match a machine id above.
   dispenser_table_furnace:
