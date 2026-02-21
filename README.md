@@ -3,63 +3,76 @@
 Plugin tecnico/gameplay extraido del modulo `drakestech` del antiguo `DrakesCore`.
 
 ## Objetivo
-Ser el motor de progresion tech de DrakesCraft: maquinas, energia, guia modular, contenido custom y API para expansiones externas.
+Ser el motor de progresion tech de DrakesCraft: maquinas, energia, automatizacion, guia modular, contenido custom masivo y API para expansiones externas.
 
-## Que hace hoy
-- Maquinas base registradas por API (`solar_generator`, `electric_furnace`).
-- Gestion de estado de maquinas con persistencia en `drakestech-machines.yml`.
-- Tick loop + transferencia de energia adyacente.
-- Guia in-game (`DrakesTech Guide`) con modulos y detalle de recetas.
-- Guide v2 con paginacion, busqueda global y navegacion de retorno.
-- Research/unlocks por jugador (`drakestech-research.yml`) con bloqueo visual en guide.
+## Estado actual
+### Core tecnico
+- Registro de contenido data-driven desde `tech-content.yml`.
+- API publica (`DrakesTechApi`) para addons externos.
+- Persistencia de maquinas en `drakestech-machines.yml`.
+- Persistencia de research por jugador en `drakestech-research.yml`.
+- Tick loop de maquinas + red de energia adyacente.
+- Red de transferencia de items entre maquinas adyacentes (inputs/outputs).
+
+### Maquinas incluidas
+- `solar_generator`
+- `electric_furnace`
+- `cobblestone_generator` (vanilla)
+- `iron_generator` (vanilla)
+- `redstone_generator` (vanilla)
+- `tech_storage_chest` (cofre enlazable a maquinas)
+
+### Automatizacion
+- Generadores de recursos vanilla con consumo energetico.
+- Cofre de almacenamiento tech conectado por adyacencia a maquinas.
+- Filtro configurable para que el cofre acepte solo items de DrakesTech o cualquier item.
+
+### Guia / UX
+- Libro `DrakesTech Guide` con modulos, busqueda y detalle de recetas.
+- Sistema de desbloqueo por XP de modulos/entries.
 - Entrega automatica del libro al primer join (configurable).
-- Ciclo de vida de addons (`DrakesTechAddon`) con auto-load y auto-unload.
-- Registro data-driven desde `tech-content.yml` (modulos, entries, enchantments, maquinas por template).
-- Motor de recetas `TechRecipeEngine` para smelting custom + fallback vanilla.
-- Comando admin avanzado:
-  - `/drakestech give <player> <machine_id>`
-  - `/drakestech guide [player]`
-  - `/drakestech search [player] <query>`
-  - `/drakestech research <unlock|lock|module|status|list> ...`
-  - `/drakestech list <machines|modules|entries|enchantments|addons> [module_id]`
-  - `/drakestech diagnostics`
-  - `/drakestech reload`
-- API publica para addons externos via Bukkit ServicesManager.
 
-## API de extensiones
-- Documento: `EXPANSIONS.md`
-- Servicio expuesto: `DrakesTechApi`
-- Interfaz recomendada: `DrakesTechAddon`
-- Permite registrar:
-  - Maquinas
-  - Modulos de guia
-  - Entradas (armas/armaduras/objetos)
-  - Encantamientos custom (metadata)
+### Contenido masivo (v2)
+- Generador configurable en `tools/content-gen`.
+- Soporta perfiles de balance por JSON (`generator-config*.json`).
+- Incluye nuevas lineas de progresion:
+  - `redstone_alloy_ingot_t*`
+  - `hardened_metal_t*`
+- Garantia del generador:
+  - todo item custom tiene receta de salida
+  - todo item custom es alcanzable desde materiales vanilla
 
-## Arquitectura
-- `api/`: contrato publico para plugins externos.
-- `bootstrap/`: carga de contenido builtin.
-- `guide/`: GUI y libro de guia.
-- `machines/`: implementaciones de maquinas.
-- `manager/`: ciclo de vida y guardado/carga.
-- `nbt/`: identidad de items por PDC.
+## Comandos admin
+- `/drakestech give <player> <machine|item> <id> [amount]`
+- `/drakestech guide [player]`
+- `/drakestech search [player] <query>`
+- `/drakestech research <unlock|lock|module|status|list> ...`
+- `/drakestech list <machines|items|modules|entries|enchantments|addons> [module_id]`
+- `/drakestech diagnostics`
+- `/drakestech reload`
 
 ## Configuracion
 - `src/main/resources/drakestech.yml`
+  - guia
+  - research
+  - transferencia de items
+  - comportamiento de Tech Storage Chest
 - `src/main/resources/tech-content.yml`
-- Persistencia runtime:
-  - `drakestech-machines.yml`
-  - `drakestech-research.yml`
-- Opciones actuales: libro guia, auto-entrega y apertura por click derecho.
+  - items, recipes, modules, machines, entries
+
+## Tools de contenido
+- `tools/content-gen/generate_massive_tech_content.py`
+- `tools/content-gen/generator-config.json`
+- `tools/content-gen/generator-config.hardcore.json`
+
+Uso:
+```powershell
+cd Plugins\DrakesTech
+python .\tools\content-gen\generate_massive_tech_content.py
+```
 
 ## Dependencias
-- Paper 1.20.6
+- Paper 1.20.6+
 - Java 21
 - PlaceholderAPI (opcional)
 - Vault (opcional)
-
-## Siguiente nivel recomendado
-- Registrar sistema real de armas/armaduras con stats y cooldowns.
-- Encantamientos custom con efecto runtime (no solo metadata).
-- Red de energia por cables/multiblock en vez de solo adyacencia directa.
-- Persistencia SQL opcional para red multi-servidor.

@@ -27,6 +27,10 @@ public class DrakesTechSettings {
     private List<String> defaultUnlockedEntries = List.of();
     private int researchModuleUnlockCostLevels = 20;
     private int researchEntryUnlockCostLevels = 8;
+    private boolean automationItemTransferEnabled = true;
+    private int automationItemTransferIntervalTicks = 10;
+    private int automationItemTransferMaxItemsPerMove = 8;
+    private boolean techStorageOnlyPluginItems = true;
 
     public DrakesTechSettings(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -57,6 +61,11 @@ public class DrakesTechSettings {
         defaultUnlockedEntries = normalizeList(config.getStringList("research.default-unlocked-entries"));
         researchModuleUnlockCostLevels = Math.max(0, config.getInt("research.unlock-costs.module-levels", 20));
         researchEntryUnlockCostLevels = Math.max(0, config.getInt("research.unlock-costs.entry-levels", 8));
+
+        automationItemTransferEnabled = config.getBoolean("automation.item-transfer.enabled", true);
+        automationItemTransferIntervalTicks = Math.max(1, config.getInt("automation.item-transfer.interval-ticks", 10));
+        automationItemTransferMaxItemsPerMove = Math.max(1, config.getInt("automation.item-transfer.max-items-per-move", 8));
+        techStorageOnlyPluginItems = config.getBoolean("automation.tech-storage.only-plugin-items", true);
     }
 
     public boolean isAutoGiveGuideOnFirstJoin() {
@@ -101,6 +110,22 @@ public class DrakesTechSettings {
 
     public int getResearchEntryUnlockCostLevels() {
         return researchEntryUnlockCostLevels;
+    }
+
+    public boolean isAutomationItemTransferEnabled() {
+        return automationItemTransferEnabled;
+    }
+
+    public int getAutomationItemTransferIntervalTicks() {
+        return automationItemTransferIntervalTicks;
+    }
+
+    public int getAutomationItemTransferMaxItemsPerMove() {
+        return automationItemTransferMaxItemsPerMove;
+    }
+
+    public boolean isTechStorageOnlyPluginItems() {
+        return techStorageOnlyPluginItems;
     }
 
     private void saveDefault() {

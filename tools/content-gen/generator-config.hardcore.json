@@ -1,0 +1,41 @@
+{
+  "max_tier": 14,
+  "module_unlock_levels": {
+    "machines": 0,
+    "materials": 1,
+    "components": 4,
+    "automation": 7,
+    "energy": 10,
+    "weapons": 16,
+    "armor": 16,
+    "enchantments": 12
+  },
+  "difficulty_by_module": {
+    "materials": 1.25,
+    "components": 1.35,
+    "automation": 1.45,
+    "energy": 1.60,
+    "weapons": 1.80,
+    "armor": 1.75,
+    "machines": 1.20,
+    "enchantments": 1.50
+  },
+  "xp_model": {
+    "materials": {"base": 1.0, "per_tier": 1.25, "power": 1.05},
+    "components": {"base": 1.5, "per_tier": 1.4, "power": 1.08},
+    "automation": {"base": 2.0, "per_tier": 1.7, "power": 1.1},
+    "energy": {"base": 3.0, "per_tier": 2.0, "power": 1.12},
+    "weapons": {"base": 4.0, "per_tier": 2.2, "power": 1.15},
+    "armor": {"base": 4.0, "per_tier": 2.1, "power": 1.15}
+  },
+  "output_multiplier_by_family": {
+    "dust": 0.85,
+    "ingot": 0.9,
+    "plate": 0.9,
+    "wire": 0.9,
+    "coil": 0.9,
+    "gear": 0.9,
+    "core": 0.85,
+    "cell": 0.85
+  }
+}

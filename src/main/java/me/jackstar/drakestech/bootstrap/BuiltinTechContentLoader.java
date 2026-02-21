@@ -7,8 +7,12 @@ import me.jackstar.drakestech.api.guide.TechGuideEntry;
 import me.jackstar.drakestech.api.guide.TechGuideModule;
 import me.jackstar.drakestech.api.item.TechItemDefinition;
 import me.jackstar.drakestech.api.machine.MachineDefinition;
+import me.jackstar.drakestech.config.DrakesTechSettings;
 import me.jackstar.drakestech.machines.impl.ElectricFurnace;
+import me.jackstar.drakestech.machines.impl.ResourceGeneratorMachine;
 import me.jackstar.drakestech.machines.impl.SolarGenerator;
+import me.jackstar.drakestech.machines.impl.TechStorageChestMachine;
+import me.jackstar.drakestech.nbt.NbtItemHandler;
 import me.jackstar.drakestech.recipe.TechRecipeEngine;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -30,7 +34,8 @@ public final class BuiltinTechContentLoader {
     private BuiltinTechContentLoader() {
     }
 
-    public static void registerDefaults(JavaPlugin plugin, DrakesTechApi api, TechRecipeEngine recipeEngine) {
+    public static void registerDefaults(JavaPlugin plugin, DrakesTechApi api, TechRecipeEngine recipeEngine,
+            NbtItemHandler nbtItemHandler, DrakesTechSettings settings) {
         ensureContentFile(plugin);
         File contentFile = new File(plugin.getDataFolder(), CONTENT_FILE_NAME);
         FileConfiguration config = YamlConfiguration.loadConfiguration(contentFile);
@@ -38,7 +43,7 @@ public final class BuiltinTechContentLoader {
         registerItems(plugin, api, config.getConfigurationSection("items"));
         registerModules(plugin, api, config.getConfigurationSection("modules"));
         registerEnchantments(plugin, api, config.getConfigurationSection("enchantments"));
-        registerMachines(plugin, api, recipeEngine, config.getConfigurationSection("machines"));
+        registerMachines(plugin, api, recipeEngine, nbtItemHandler, settings, config.getConfigurationSection("machines"));
         registerGuideEntries(plugin, api, config.getConfigurationSection("entries"));
         registerEnchantmentGuideEntries(plugin, api, config.getBoolean("guide.auto-create-enchantment-entries", true));
     }
@@ -70,6 +75,7 @@ public final class BuiltinTechContentLoader {
     }
 
     private static void registerMachines(JavaPlugin plugin, DrakesTechApi api, TechRecipeEngine recipeEngine,
+            NbtItemHandler nbtItemHandler, DrakesTechSettings settings,
             ConfigurationSection section) {
         if (section == null) {
             plugin.getLogger().warning("No 'machines' section found in " + CONTENT_FILE_NAME + ".");
@@ -115,6 +121,33 @@ public final class BuiltinTechContentLoader {
                         recipe,
                         machineItem,
                         location -> new ElectricFurnace(location, recipeEngine));
+                case "resource_generator" -> new MachineDefinition(
+                        id,
+                        moduleId,
+                        displayName,
+                        description,
+                        recipe,
+                        machineItem,
+                        location -> new ResourceGeneratorMachine(
+                                id,
+                                location,
+                                parseMaterial(machineSection.getString("output-material"), Material.COBBLESTONE, plugin, "machine output " + id),
+                                Math.max(1, machineSection.getInt("output-amount", 1)),
+                                Math.max(1, machineSection.getInt("ticks-per-cycle", 40)),
+                                Math.max(0.0D, machineSection.getDouble("energy-per-cycle", 30.0D)),
+                                Math.max(100.0D, machineSection.getDouble("max-energy", 2_500.0D))));
+                case "tech_storage_chest" -> new MachineDefinition(
+                        id,
+                        moduleId,
+                        displayName,
+                        description,
+                        recipe,
+                        machineItem,
+                        location -> new TechStorageChestMachine(
+                                location,
+                                Math.max(9, machineSection.getInt("inventory-size", 54)),
+                                nbtItemHandler,
+                                machineSection.getBoolean("only-plugin-items", settings.isTechStorageOnlyPluginItems())));
                 default -> null;
             };
 
@@ -171,6 +204,9 @@ public final class BuiltinTechContentLoader {
             String module = entrySection.getString("module");
             if (module == null || module.isBlank()) {
                 plugin.getLogger().warning("Guide entry '" + id + "' has no module. Skipping.");
+                continue;
+            }
+            if (api.findGuideEntry(module, id).isPresent()) {
                 continue;
             }
 

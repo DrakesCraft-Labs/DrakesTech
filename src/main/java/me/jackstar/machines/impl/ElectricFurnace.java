@@ -2,6 +2,7 @@ package me.jackstar.drakestech.machines.impl;
 
 import me.jackstar.drakestech.energy.EnergyNode;
 import me.jackstar.drakestech.machines.AbstractMachine;
+import me.jackstar.drakestech.machines.ItemTransportNode;
 import me.jackstar.drakestech.recipe.TechRecipeEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,7 +10,7 @@ import org.bukkit.Particle;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class ElectricFurnace extends AbstractMachine implements EnergyNode {
+public class ElectricFurnace extends AbstractMachine implements EnergyNode, ItemTransportNode {
 
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT = 1;
@@ -134,5 +135,23 @@ public class ElectricFurnace extends AbstractMachine implements EnergyNode {
             return false;
         }
         return output.getAmount() + result.getAmount() <= output.getMaxStackSize();
+    }
+
+    @Override
+    public int[] getInputSlots() {
+        return new int[] { INPUT_SLOT };
+    }
+
+    @Override
+    public int[] getOutputSlots() {
+        return new int[] { OUTPUT_SLOT };
+    }
+
+    @Override
+    public boolean canAcceptInput(int slot, ItemStack stack) {
+        if (slot != INPUT_SLOT || stack == null || stack.getType().isAir()) {
+            return false;
+        }
+        return recipeEngine.resolveSmeltingResult(stack).isPresent();
     }
 }

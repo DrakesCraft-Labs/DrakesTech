@@ -47,3 +47,21 @@ research:
   # Format: "module|entry" or "module|*" (unlock full module).
   # [DANGER] Keep IDs in sync with tech-content.yml.
   default-unlocked-entries: []
+
+automation:
+  item-transfer:
+    # Enable automatic item transport between adjacent DrakesTech machines.
+    enabled: true
+
+    # Ticks between each transfer cycle.
+    # Recommended: 5-20. Lower values move items faster but cost more CPU.
+    interval-ticks: 10
+
+    # Maximum amount of items moved per source->target cycle.
+    # [DANGER] Very high values can increase hopper-like throughput and server load.
+    max-items-per-move: 8
+
+  tech-storage:
+    # If true, Tech Storage Chest accepts only DrakesTech items and machine items.
+    # If false, it can store vanilla and any other plugin items too.
+    only-plugin-items: true

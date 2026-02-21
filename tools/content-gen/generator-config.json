@@ -1,0 +1,75 @@
+{
+  "max_tier": 12,
+  "start_custom_model_data": 30000,
+  "enabled_metals": [
+    "copper",
+    "tin",
+    "aluminum",
+    "nickel",
+    "silver",
+    "lead",
+    "zinc",
+    "titanium",
+    "tungsten",
+    "cobalt",
+    "chromium",
+    "platinum",
+    "iridium",
+    "osmium",
+    "uranium",
+    "palladium"
+  ],
+  "tier_catalysts": [
+    "REDSTONE",
+    "QUARTZ",
+    "AMETHYST_SHARD",
+    "LAPIS_LAZULI",
+    "EMERALD",
+    "DIAMOND",
+    "BLAZE_POWDER",
+    "ENDER_PEARL",
+    "NETHER_STAR",
+    "ECHO_SHARD",
+    "NETHERITE_INGOT",
+    "DRAGON_BREATH"
+  ],
+  "module_unlock_levels": {
+    "machines": 0,
+    "materials": 0,
+    "components": 2,
+    "automation": 4,
+    "energy": 6,
+    "weapons": 10,
+    "armor": 10,
+    "enchantments": 8
+  },
+  "xp_model": {
+    "materials": {"base": 0.5, "per_tier": 1.0, "power": 1.0},
+    "components": {"base": 1.0, "per_tier": 1.0, "power": 1.0},
+    "automation": {"base": 2.0, "per_tier": 1.15, "power": 1.0},
+    "energy": {"base": 3.0, "per_tier": 1.2, "power": 1.05},
+    "weapons": {"base": 4.0, "per_tier": 1.4, "power": 1.1},
+    "armor": {"base": 4.0, "per_tier": 1.35, "power": 1.1},
+    "default": {"base": 1.0, "per_tier": 1.0, "power": 1.0}
+  },
+  "difficulty_by_module": {
+    "machines": 1.0,
+    "materials": 1.0,
+    "components": 1.0,
+    "automation": 1.0,
+    "energy": 1.0,
+    "weapons": 1.0,
+    "armor": 1.0,
+    "enchantments": 1.0
+  },
+  "output_multiplier_by_family": {
+    "dust": 1.0,
+    "ingot": 1.0,
+    "plate": 1.0,
+    "wire": 1.0,
+    "coil": 1.0,
+    "gear": 1.0,
+    "core": 1.0,
+    "cell": 1.0
+  }
+}

@@ -46,6 +46,7 @@ public class DrakesTechPlugin extends JavaPlugin {
     private TechCraftingRecipeService craftingRecipeService;
     private TechResearchService researchService;
     private MultiblockService multiblockService;
+    private NbtItemHandler nbtItemHandler;
 
     @Override
     public void onEnable() {
@@ -57,7 +58,7 @@ public class DrakesTechPlugin extends JavaPlugin {
         settings = new DrakesTechSettings(this);
 
         logLoading("Initializing NBT and machine factory");
-        NbtItemHandler nbtItemHandler = new PdcNbtItemHandler(this);
+        nbtItemHandler = new PdcNbtItemHandler(this);
         machineFactory = new MachineFactory(nbtItemHandler);
         itemRegistry = new TechItemRegistry(nbtItemHandler);
 
@@ -79,12 +80,12 @@ public class DrakesTechPlugin extends JavaPlugin {
         services.register(DrakesTechApi.class, apiService, this, ServicePriority.Normal);
 
         logLoading("Registering built-in content");
-        BuiltinTechContentLoader.registerDefaults(this, apiService, recipeEngine);
+        BuiltinTechContentLoader.registerDefaults(this, apiService, recipeEngine, nbtItemHandler, settings);
         recipeEngine.reload();
         craftingRecipeService.reload();
 
         logLoading("Starting machine manager");
-        machineManager = new MachineManager(this, machineFactory);
+        machineManager = new MachineManager(this, machineFactory, settings);
         machineManager.start();
         multiblockService = new MultiblockService(this, machineFactory, machineManager);
         multiblockService.reload();
@@ -143,7 +144,7 @@ public class DrakesTechPlugin extends JavaPlugin {
         if (apiService != null) {
             apiService.unregisterOwnedContent(getName());
             if (recipeEngine != null) {
-                BuiltinTechContentLoader.registerDefaults(this, apiService, recipeEngine);
+                BuiltinTechContentLoader.registerDefaults(this, apiService, recipeEngine, nbtItemHandler, settings);
                 recipeEngine.reload();
             }
             if (craftingRecipeService != null) {
