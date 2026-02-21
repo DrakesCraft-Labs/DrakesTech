@@ -10,6 +10,7 @@ commands:
     description: Admin command for DrakesTech
     usage: /drakestech <give|guide|search|research|list|diagnostics|reload>
     permission: drakestech.admin
+    aliases: [dtech, drtech]
 permissions:
   drakestech.admin:
     description: Allows use of DrakesTech admin command
