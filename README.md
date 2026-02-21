@@ -3,27 +3,63 @@
 Plugin tecnico/gameplay extraido del modulo `drakestech` del antiguo `DrakesCore`.
 
 ## Objetivo
-Agregar maquinas y logica de energia estilo tech sin mods de cliente.
+Ser el motor de progresion tech de DrakesCraft: maquinas, energia, guia modular, contenido custom y API para expansiones externas.
 
 ## Que hace hoy
-- Comando admin `/drakestech` para items/maquinas.
-- `MachineManager` para ciclo de vida y tick de maquinas.
-- `MachineFactory` para construir maquinas por ID.
-- NBT/PDC para identificar items custom.
-- Listener de bloques para interaccion base.
+- Maquinas base registradas por API (`solar_generator`, `electric_furnace`).
+- Gestion de estado de maquinas con persistencia en `drakestech-machines.yml`.
+- Tick loop + transferencia de energia adyacente.
+- Guia in-game (`DrakesTech Guide`) con modulos y detalle de recetas.
+- Guide v2 con paginacion, busqueda global y navegacion de retorno.
+- Research/unlocks por jugador (`drakestech-research.yml`) con bloqueo visual en guide.
+- Entrega automatica del libro al primer join (configurable).
+- Ciclo de vida de addons (`DrakesTechAddon`) con auto-load y auto-unload.
+- Registro data-driven desde `tech-content.yml` (modulos, entries, enchantments, maquinas por template).
+- Motor de recetas `TechRecipeEngine` para smelting custom + fallback vanilla.
+- Comando admin avanzado:
+  - `/drakestech give <player> <machine_id>`
+  - `/drakestech guide [player]`
+  - `/drakestech search [player] <query>`
+  - `/drakestech research <unlock|lock|module|status|list> ...`
+  - `/drakestech list <machines|modules|entries|enchantments|addons> [module_id]`
+  - `/drakestech diagnostics`
+  - `/drakestech reload`
+- API publica para addons externos via Bukkit ServicesManager.
+
+## API de extensiones
+- Documento: `EXPANSIONS.md`
+- Servicio expuesto: `DrakesTechApi`
+- Interfaz recomendada: `DrakesTechAddon`
+- Permite registrar:
+  - Maquinas
+  - Modulos de guia
+  - Entradas (armas/armaduras/objetos)
+  - Encantamientos custom (metadata)
 
 ## Arquitectura
-- `machines/`: maquinas abstractas e implementaciones.
-- `energy/`: nodos y red energetica.
-- `multiblock/`: deteccion base de estructuras.
-- `nbt/`: capa de metadatos en items.
+- `api/`: contrato publico para plugins externos.
+- `bootstrap/`: carga de contenido builtin.
+- `guide/`: GUI y libro de guia.
+- `machines/`: implementaciones de maquinas.
+- `manager/`: ciclo de vida y guardado/carga.
+- `nbt/`: identidad de items por PDC.
+
+## Configuracion
+- `src/main/resources/drakestech.yml`
+- `src/main/resources/tech-content.yml`
+- Persistencia runtime:
+  - `drakestech-machines.yml`
+  - `drakestech-research.yml`
+- Opciones actuales: libro guia, auto-entrega y apertura por click derecho.
 
 ## Dependencias
 - Paper 1.20.6
 - Java 21
+- PlaceholderAPI (opcional)
+- Vault (opcional)
 
-## Pendiente real
-- Persistencia robusta de estado de maquinas.
-- Interfaces GUI de maquinas.
-- Balance de energia, recetas y progresion de juego.
-- Telemetria para debugging en produccion.
+## Siguiente nivel recomendado
+- Registrar sistema real de armas/armaduras con stats y cooldowns.
+- Encantamientos custom con efecto runtime (no solo metadata).
+- Red de energia por cables/multiblock en vez de solo adyacencia directa.
+- Persistencia SQL opcional para red multi-servidor.

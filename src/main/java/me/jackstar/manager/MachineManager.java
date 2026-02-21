@@ -64,6 +64,11 @@ public class MachineManager {
         saveMachines();
     }
 
+    public void reloadMachinesFromDisk() {
+        loadMachines();
+        ticksSinceLastSave = 0L;
+    }
+
     public void registerMachine(AbstractMachine machine) {
         registerMachine(machine, true);
     }

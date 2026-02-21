@@ -4,10 +4,11 @@ main: me.jackstar.drakestech.DrakesTechPlugin
 api-version: '1.20'
 authors: [JackStar]
 description: Tech machines and energy system for DrakesCraft
+softdepend: [PlaceholderAPI, Vault]
 commands:
   drakestech:
     description: Admin command for DrakesTech
-    usage: /drakestech give <player> <machine_id>
+    usage: /drakestech <give|guide|search|research|list|diagnostics|reload> (list supports addons)
     permission: drakestech.admin
 permissions:
   drakestech.admin:

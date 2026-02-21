@@ -1,0 +1,128 @@
+package me.jackstar.drakestech.config;
+
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class DrakesTechSettings {
+
+    private final JavaPlugin plugin;
+    private final File file;
+
+    private boolean autoGiveGuideOnFirstJoin = true;
+    private boolean openGuideOnRightClick = true;
+    private Material guideBookMaterial = Material.WRITTEN_BOOK;
+    private String guideBookName = "<gradient:gold:red><b>DrakesTech Guide</b></gradient>";
+    private List<String> guideBookLore = List.of("<gray>Right click to open modules.</gray>");
+    private String guideMainTitle = "<gold><b>DrakesTech Modules</b></gold>";
+    private boolean researchEnabled = true;
+    private List<String> defaultUnlockedModules = List.of("machines");
+    private List<String> defaultUnlockedEntries = List.of();
+
+    public DrakesTechSettings(JavaPlugin plugin) {
+        this.plugin = plugin;
+        this.file = new File(plugin.getDataFolder(), "drakestech.yml");
+        saveDefault();
+        reload();
+    }
+
+    public void reload() {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        autoGiveGuideOnFirstJoin = config.getBoolean("guide.auto-give-on-first-join", true);
+        openGuideOnRightClick = config.getBoolean("guide.open-on-right-click", true);
+
+        String materialRaw = config.getString("guide.book.material", "WRITTEN_BOOK");
+        Material parsedMaterial = materialRaw == null ? null : Material.matchMaterial(materialRaw);
+        guideBookMaterial = parsedMaterial == null ? Material.WRITTEN_BOOK : parsedMaterial;
+
+        guideBookName = config.getString("guide.book.name", guideBookName);
+        List<String> lore = config.getStringList("guide.book.lore");
+        guideBookLore = lore.isEmpty() ? List.of("<gray>Right click to open modules.</gray>") : new ArrayList<>(lore);
+        guideMainTitle = config.getString("guide.main-title", guideMainTitle);
+
+        researchEnabled = config.getBoolean("research.enabled", true);
+        defaultUnlockedModules = normalizeList(config.getStringList("research.default-unlocked-modules"));
+        if (defaultUnlockedModules.isEmpty()) {
+            defaultUnlockedModules = List.of("machines");
+        }
+        defaultUnlockedEntries = normalizeList(config.getStringList("research.default-unlocked-entries"));
+    }
+
+    public boolean isAutoGiveGuideOnFirstJoin() {
+        return autoGiveGuideOnFirstJoin;
+    }
+
+    public boolean isOpenGuideOnRightClick() {
+        return openGuideOnRightClick;
+    }
+
+    public Material getGuideBookMaterial() {
+        return guideBookMaterial;
+    }
+
+    public String getGuideBookName() {
+        return guideBookName;
+    }
+
+    public List<String> getGuideBookLore() {
+        return guideBookLore;
+    }
+
+    public String getGuideMainTitle() {
+        return guideMainTitle;
+    }
+
+    public boolean isResearchEnabled() {
+        return researchEnabled;
+    }
+
+    public List<String> getDefaultUnlockedModules() {
+        return defaultUnlockedModules;
+    }
+
+    public List<String> getDefaultUnlockedEntries() {
+        return defaultUnlockedEntries;
+    }
+
+    private void saveDefault() {
+        if (plugin.getResource("drakestech.yml") != null) {
+            plugin.saveResource("drakestech.yml", false);
+            return;
+        }
+
+        try {
+            if (!plugin.getDataFolder().exists()) {
+                plugin.getDataFolder().mkdirs();
+            }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    private List<String> normalizeList(List<String> values) {
+        if (values == null || values.isEmpty()) {
+            return List.of();
+        }
+
+        List<String> normalized = new ArrayList<>();
+        for (String value : values) {
+            if (value == null) {
+                continue;
+            }
+            String clean = value.trim().toLowerCase(Locale.ROOT);
+            if (!clean.isEmpty()) {
+                normalized.add(clean);
+            }
+        }
+        return List.copyOf(normalized);
+    }
+}

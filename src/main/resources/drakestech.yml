@@ -1,0 +1,40 @@
+# DrakesTech runtime settings.
+# These options control guide behavior and first-join UX.
+
+guide:
+  # Give the guide book automatically the first time a player joins.
+  auto-give-on-first-join: true
+
+  # Open guide when player right-clicks with the guide book.
+  # [DANGER] If disabled, players need command/menu access from another source.
+  open-on-right-click: true
+
+  # Main title for module selector inventory.
+  main-title: "<gold><b>DrakesTech Modules</b></gold>"
+
+  book:
+    # Material used for the guide book item.
+    material: WRITTEN_BOOK
+
+    # Display name (MiniMessage supported).
+    name: "<gradient:gold:red><b>DrakesTech Guide</b></gradient>"
+
+    # Lore lines (MiniMessage supported).
+    lore:
+      - "<gray>Right click to open modules.</gray>"
+      - "<dark_gray>Powered by DrakesCraft Labs</dark_gray>"
+
+research:
+  # Enable progression locks for guide entries.
+  # If false, all guide entries are visible and unlocked for everyone.
+  enabled: true
+
+  # Modules unlocked by default for every player.
+  # Format: module id (lowercase).
+  default-unlocked-modules:
+    - machines
+
+  # Specific entries unlocked by default.
+  # Format: "module|entry" or "module|*" (unlock full module).
+  # [DANGER] Keep IDs in sync with tech-content.yml.
+  default-unlocked-entries: []

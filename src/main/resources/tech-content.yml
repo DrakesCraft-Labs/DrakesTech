@@ -1,0 +1,143 @@
+# DrakesTech content registry.
+# This file defines modules, guide entries, enchantments and machine templates.
+# You can tune progression and texts without touching Java code.
+
+guide:
+  # Auto-create one guide entry for each enchantment declared below.
+  auto-create-enchantment-entries: true
+
+recipes:
+  # If true, Electric Furnace can use vanilla smelting recipes
+  # when no custom recipe is defined below.
+  use-vanilla-fallback: true
+
+  smelting:
+    # Example custom recipe.
+    # Input can be "input" (single) or "inputs" (list of materials).
+    silicon:
+      enabled: true
+      input: SAND
+      output: GLASS
+      amount: 1
+
+modules:
+  # Internal module id. Keep stable after launch.
+  machines:
+    enabled: true
+    display-name: "<gradient:yellow:gold><b>Machines</b></gradient>"
+    icon: OBSERVER
+    description:
+      - "<gray>Automation and processing blocks.</gray>"
+
+  weapons:
+    enabled: true
+    display-name: "<gradient:red:gold><b>Weapons</b></gradient>"
+    icon: NETHERITE_SWORD
+    description:
+      - "<gray>Combat gear and active abilities.</gray>"
+
+  armor:
+    enabled: true
+    display-name: "<gradient:aqua:blue><b>Armor</b></gradient>"
+    icon: NETHERITE_CHESTPLATE
+    description:
+      - "<gray>Defensive sets and passive perks.</gray>"
+
+  energy:
+    enabled: true
+    display-name: "<gradient:green:yellow><b>Energy</b></gradient>"
+    icon: REDSTONE
+    description:
+      - "<gray>Power production and distribution.</gray>"
+
+  enchantments:
+    enabled: true
+    display-name: "<gradient:light_purple:blue><b>Enchantments</b></gradient>"
+    icon: ENCHANTED_BOOK
+    description:
+      - "<gray>Custom enchantments for tech content.</gray>"
+
+machines:
+  # Machine definitions are template-based for runtime safety.
+  # Supported templates today: solar_generator, electric_furnace
+  # [DANGER] Do not change an id after placing machines in a world.
+
+  solar_generator:
+    enabled: true
+    template: solar_generator
+    module: machines
+    display-name: "<gold><b>Solar Generator</b></gold>"
+    icon: DAYLIGHT_DETECTOR
+    description:
+      - "<gray>Generates <yellow>10 J/t</yellow> during clear day.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>Glass | Glass | Glass</yellow>"
+      - "<gray>Middle row:</gray> <yellow>Copper | Daylight Detector | Copper</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>Iron | Redstone Block | Iron</yellow>"
+
+  electric_furnace:
+    enabled: true
+    template: electric_furnace
+    module: machines
+    display-name: "<aqua><b>Electric Furnace</b></aqua>"
+    icon: FURNACE
+    description:
+      - "<gray>Consumes power to smelt faster.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>Iron | Furnace | Iron</yellow>"
+      - "<gray>Middle row:</gray> <yellow>Copper | Redstone Block | Copper</yellow>"
+      - "<gray>Bottom row:</gray> <yellow>Iron | Hopper | Iron</yellow>"
+
+enchantments:
+  drake_fury:
+    enabled: true
+    display-name: "<gradient:red:gold><b>Drake Fury</b></gradient>"
+    max-level: 3
+    description:
+      - "<gray>Boosts damage after machine-powered charge.</gray>"
+
+  energy_guard:
+    enabled: true
+    display-name: "<gradient:aqua:blue><b>Energy Guard</b></gradient>"
+    max-level: 2
+    description:
+      - "<gray>Converts incoming damage into energy drain.</gray>"
+
+entries:
+  # Generic guide entries (non-machine content).
+  # [DANGER] 'module' must point to an existing module id.
+
+  blaze_blade:
+    enabled: true
+    module: weapons
+    display-name: "<red><b>Blaze Blade</b></red>"
+    icon: BLAZE_ROD
+    preview-material: NETHERITE_SWORD
+    description:
+      - "<gray>Melee weapon with burn stacks.</gray>"
+    recipe:
+      - "<gray>Top row:</gray> <yellow>Blaze Rod | Netherite Sword | Blaze Rod</yellow>"
+      - "<gray>Middle row:</gray> <yellow>Fire Charge | Energy Core | Fire Charge</yellow>"
+
+  drake_guard:
+    enabled: true
+    module: armor
+    display-name: "<aqua><b>Drake Guard Set</b></aqua>"
+    icon: NETHERITE_CHESTPLATE
+    preview-material: NETHERITE_CHESTPLATE
+    description:
+      - "<gray>Balanced defensive tech armor.</gray>"
+    recipe:
+      - "<gray>Craft each piece with:</gray>"
+      - "<yellow>Netherite + Reinforced Plates + Energy Thread</yellow>"
+
+  energy_cable:
+    enabled: true
+    module: energy
+    display-name: "<yellow><b>Energy Cable</b></yellow>"
+    icon: CHAIN
+    preview-material: CHAIN
+    description:
+      - "<gray>Transfers power between adjacent nodes.</gray>"
+    recipe:
+      - "<gray>Recipe:</gray> <yellow>Copper + Redstone + Iron</yellow>"

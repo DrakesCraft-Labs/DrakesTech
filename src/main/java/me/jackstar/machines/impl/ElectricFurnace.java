@@ -2,15 +2,12 @@ package me.jackstar.drakestech.machines.impl;
 
 import me.jackstar.drakestech.energy.EnergyNode;
 import me.jackstar.drakestech.machines.AbstractMachine;
+import me.jackstar.drakestech.recipe.TechRecipeEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ElectricFurnace extends AbstractMachine implements EnergyNode {
 
@@ -20,32 +17,15 @@ public class ElectricFurnace extends AbstractMachine implements EnergyNode {
     private static final double ENERGY_PER_SMELT = 50.0D;
     private static final double MAX_ENERGY = 5_000.0D;
 
-    private static final Map<Material, Material> SIMPLE_RECIPES = new HashMap<>();
-
-    static {
-        SIMPLE_RECIPES.put(Material.IRON_ORE, Material.IRON_INGOT);
-        SIMPLE_RECIPES.put(Material.DEEPSLATE_IRON_ORE, Material.IRON_INGOT);
-        SIMPLE_RECIPES.put(Material.GOLD_ORE, Material.GOLD_INGOT);
-        SIMPLE_RECIPES.put(Material.DEEPSLATE_GOLD_ORE, Material.GOLD_INGOT);
-        SIMPLE_RECIPES.put(Material.COPPER_ORE, Material.COPPER_INGOT);
-        SIMPLE_RECIPES.put(Material.DEEPSLATE_COPPER_ORE, Material.COPPER_INGOT);
-        SIMPLE_RECIPES.put(Material.ANCIENT_DEBRIS, Material.NETHERITE_SCRAP);
-        SIMPLE_RECIPES.put(Material.SAND, Material.GLASS);
-        SIMPLE_RECIPES.put(Material.COBBLESTONE, Material.STONE);
-        SIMPLE_RECIPES.put(Material.BEEF, Material.COOKED_BEEF);
-        SIMPLE_RECIPES.put(Material.CHICKEN, Material.COOKED_CHICKEN);
-        SIMPLE_RECIPES.put(Material.MUTTON, Material.COOKED_MUTTON);
-        SIMPLE_RECIPES.put(Material.PORKCHOP, Material.COOKED_PORKCHOP);
-        SIMPLE_RECIPES.put(Material.POTATO, Material.BAKED_POTATO);
-    }
-
     private final Inventory inventory;
+    private final TechRecipeEngine recipeEngine;
     private double storedEnergy;
     private int progressTicks;
 
-    public ElectricFurnace(Location location) {
+    public ElectricFurnace(Location location, TechRecipeEngine recipeEngine) {
         super("electric_furnace", location);
         this.inventory = Bukkit.createInventory(this, 9, "Electric Furnace");
+        this.recipeEngine = recipeEngine;
     }
 
     @Override
@@ -57,13 +37,13 @@ public class ElectricFurnace extends AbstractMachine implements EnergyNode {
             return;
         }
 
-        Material resultType = SIMPLE_RECIPES.get(input.getType());
-        if (resultType == null) {
+        ItemStack result = recipeEngine.resolveSmeltingResult(input).orElse(null);
+        if (result == null || result.getType().isAir()) {
             progressTicks = 0;
             return;
         }
 
-        if (!canOutput(resultType, output)) {
+        if (!canOutput(result, output)) {
             progressTicks = 0;
             return;
         }
@@ -90,9 +70,9 @@ public class ElectricFurnace extends AbstractMachine implements EnergyNode {
         }
 
         if (output == null || output.getType().isAir()) {
-            inventory.setItem(OUTPUT_SLOT, new ItemStack(resultType, 1));
+            inventory.setItem(OUTPUT_SLOT, result.clone());
         } else {
-            output.setAmount(output.getAmount() + 1);
+            output.setAmount(output.getAmount() + result.getAmount());
             inventory.setItem(OUTPUT_SLOT, output);
         }
 
@@ -146,13 +126,13 @@ public class ElectricFurnace extends AbstractMachine implements EnergyNode {
         return false;
     }
 
-    private boolean canOutput(Material resultType, ItemStack output) {
+    private boolean canOutput(ItemStack result, ItemStack output) {
         if (output == null || output.getType().isAir()) {
             return true;
         }
-        if (output.getType() != resultType) {
+        if (output.getType() != result.getType()) {
             return false;
         }
-        return output.getAmount() < output.getMaxStackSize();
+        return output.getAmount() + result.getAmount() <= output.getMaxStackSize();
     }
 }
