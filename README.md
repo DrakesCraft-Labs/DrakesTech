@@ -10,7 +10,7 @@ Ser el motor de progresion tech de DrakesCraft: maquinas, energia, automatizacio
 - Registro de contenido data-driven desde `tech-content.yml`.
 - API publica (`DrakesTechApi`) para addons externos.
 - Persistencia de maquinas en `drakestech-machines.yml`.
-- Persistencia de research por player en `drakestech-research.yml`.
+- Persistencia de research por jugador en `drakestech-research.yml`.
 - Tick loop de maquinas + red de energia adyacente.
 - Red de transferencia de items entre maquinas adyacentes (inputs/outputs).
 
