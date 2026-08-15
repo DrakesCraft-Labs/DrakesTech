@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/DrakesTech/master/banner.svg" width="100%" alt="DRAKES TECH animated banner" />
+</p>
+
 # DrakesTech
 
 Plugin tecnico/gameplay extraido del modulo `drakestech` del antiguo `DrakesCore`.
@@ -93,3 +97,4 @@ python .\tools\content-gen\generate_massive_tech_content.py
 - Asimilacion por addons (investigacion + backlog): `SLIMEFUN_ADDON_ASSIMILATION_PLAN.md`
 - Referencias tecnicas curadas por feature: `SLIMEFUN_FEATURE_REFERENCE.md`
 - Scanner local de features por addon: `tools/slimefun-research/scan_addon_features.ps1`
+
