@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/DrakesTech/master/banner.svg" width="100%" alt="DRAKES TECH animated banner" />
+  <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/DrakesTech/main/banner.svg" width="100%" alt="DRAKES TECH animated banner" />
 </p>
 
 # DrakesTech
