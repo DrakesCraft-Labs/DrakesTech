@@ -9,7 +9,7 @@
 // del token si solo tiene una. El token llega por variable de entorno desde el secreto de la
 // organizacion de GitHub: nunca se imprime ni se escribe en disco.
 
-import { appendFileSync, existsSync, readFileSync } from 'fs';
+import { appendFileSync, existsSync, readFileSync, mkdirSync } from 'fs';
 
 const V2 = 'https://api.modrinth.com/v2';
 const V3 = 'https://api.modrinth.com/v3';
@@ -85,8 +85,11 @@ if (!proyecto) {
     client_side: 'unsupported',
     server_side: 'required',
     project_type: 'mod',
-    is_draft: true, // borrador: nada se hace publico sin revision humana
-    license_id: 'GPL-3.0-only',
+    // Siempre se crea como borrador: Modrinth rechaza un proyecto enviado a revision que aun
+    // no tenga ninguna version ("Project submitted for review with no initial versions"). El
+    // envio a revision lo hace el paso posterior, ya con el jar subido.
+    is_draft: true,
+    license_id: process.env.PROJECT_LICENSE || 'GPL-3.0-only',
     // La API v2 lo exige aunque se cree vacio: el jar se sube despues como version
     // propia, no en la creacion del proyecto.
     initial_versions: [],
@@ -123,3 +126,77 @@ if (process.env.GITHUB_OUTPUT) {
   appendFileSync(process.env.GITHUB_OUTPUT, `project_slug=${proyecto.slug}\n`);
 }
 console.log(`Proyecto en uso: ${proyecto.slug} (${proyecto.id})`);
+
+// --- Icono del proyecto -----------------------------------------------------------------
+// mc-publish sube el jar pero no toca el icono, y Modrinth muestra un cubo gris por defecto en
+// el buscador. Modrinth solo admite imagenes rasterizadas (PNG, WebP, JPG) en su endpoint de iconos,
+// rechazando SVG con HTTP 400. Si solo existe icon.svg, se rasteriza a 512x512 PNG con puppeteer.
+try {
+  let rutaIconoPng = existsSync('.modrinth/icon.png')
+    ? '.modrinth/icon.png'
+    : (existsSync('docs/icon.png') ? 'docs/icon.png' : null);
+
+  if (!rutaIconoPng && existsSync('docs/icon.svg')) {
+    console.log('Convirtiendo docs/icon.svg a PNG 512x512 para Modrinth...');
+    try {
+      const puppeteer = (await import('puppeteer')).default;
+      const svg = readFileSync('docs/icon.svg', 'utf8');
+      const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+      const page = await browser.newPage();
+      await page.setViewport({ width: 512, height: 512, deviceScaleFactor: 1 });
+      await page.setContent(
+        `<!doctype html><html><head><style>html,body{margin:0;padding:0;overflow:hidden;background:transparent;}</style></head><body>${svg}</body></html>`,
+        { waitUntil: 'networkidle0' }
+      );
+      const dir = '.modrinth';
+      if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+      rutaIconoPng = `${dir}/icon.png`;
+      await page.screenshot({ path: rutaIconoPng, omitBackground: true });
+      await browser.close();
+      console.log('Icono PNG generado con exito.');
+    } catch (err) {
+      console.error('No se pudo convertir SVG a PNG con puppeteer:', err.message);
+    }
+  }
+
+  if (rutaIconoPng && existsSync(rutaIconoPng)) {
+    console.log(`icono actual en Modrinth: ${proyecto.icon_url || 'ninguno'}`);
+    console.log(`Subiendo icono PNG (${rutaIconoPng})...`);
+    const png = readFileSync(rutaIconoPng);
+    const r = await fetch(`${V2}/project/${proyecto.id}/icon?ext=png`, {
+      method: 'PATCH',
+      headers: { ...cabeceras, 'Content-Type': 'image/png' },
+      body: png,
+    });
+    if (r.ok) {
+      console.log('Icono PNG subido correctamente a Modrinth.');
+    } else {
+      console.error(`No se pudo subir el icono (HTTP ${r.status}): ${(await r.text()).slice(0, 200)}`);
+    }
+  } else {
+    console.log('Sin icon.png para subir.');
+  }
+} catch (e) {
+  console.error('Fallo al subir el icono:', e.message);
+}
+
+// --- Descripcion larga ------------------------------------------------------------------
+// mc-publish v3.3 no admite modrinth-description-*: avisa de "Unexpected input" y no la toca,
+// asi que la pagina se quedaba con la descripcion de la creacion. Se sincroniza aqui con el
+// README, que es lo que el jugador lee en Modrinth.
+try {
+  if (existsSync('README.md')) {
+    const cuerpo = readFileSync('README.md', 'utf8');
+    if (cuerpo.trim() && cuerpo !== proyecto.body) {
+      const r = await fetch(`${V2}/project/${proyecto.id}`, {
+        method: 'PATCH',
+        headers: { ...cabeceras, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body: cuerpo }),
+      });
+      console.log(r.ok ? 'Descripcion sincronizada con el README.'
+                       : `No se pudo actualizar la descripcion (HTTP ${r.status}).`);
+    }
+  }
+} catch (e) {
+  console.error('Fallo al sincronizar la descripcion:', e.message);
+}
