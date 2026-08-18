@@ -169,6 +169,9 @@ jobs:
           PROJECT_SLUG: ${{ github.event.repository.name }}
           PROJECT_NAME: ${{ github.event.repository.name }}
           PROJECT_SUMMARY: ${{ github.event.repository.description }}
+          # Vacio = se envia a la cola de revision de Modrinth. Poner "true" lo deja en borrador.
+          MODRINTH_DRAFT: ${{ vars.MODRINTH_DRAFT }}
+          PROJECT_LICENSE: ${{ vars.MODRINTH_LICENSE }}
         run: node .github/scripts/modrinth-ensure-project.mjs
 
       - name: Publicar en Modrinth
@@ -188,12 +191,19 @@ jobs:
             spigot
           game-versions: |
             1.21.x
-          # La descripcion del proyecto se mantiene sincronizada con el README del repo.
-          modrinth-description-mode: replace
-          modrinth-description-file: README.md
           changelog: ${{ needs.decidir.outputs.motivo }}
           # No fallar si algun campo opcional falta.
           modrinth-featured: false
+
+      - name: Enviar el proyecto a revision de Modrinth
+        # Solo tiene sentido tras subir la version: Modrinth rechaza un proyecto en revision
+        # que no tenga ninguna. Por eso va despues de publicar y no en la creacion.
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT_ID: ${{ steps.cfg.outputs.project_id }}
+          MODRINTH_DRAFT: ${{ vars.MODRINTH_DRAFT }}
+        run: node .github/scripts/modrinth-submit-review.mjs
 
       - name: Resumen
         if: always()
