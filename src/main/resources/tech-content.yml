@@ -597,7 +597,7 @@ items:
 
   aluminum_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30147
     display-name: '<#e0e4ea><b>Aluminum Wire T1</b></#e0e4ea>'
     description:
@@ -605,7 +605,7 @@ items:
 
   aluminum_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30201
     display-name: '<#e0e4ea><b>Aluminum Wire T10</b></#e0e4ea>'
     description:
@@ -613,7 +613,7 @@ items:
 
   aluminum_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30207
     display-name: '<#e0e4ea><b>Aluminum Wire T11</b></#e0e4ea>'
     description:
@@ -621,7 +621,7 @@ items:
 
   aluminum_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30213
     display-name: '<#e0e4ea><b>Aluminum Wire T12</b></#e0e4ea>'
     description:
@@ -629,7 +629,7 @@ items:
 
   aluminum_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30153
     display-name: '<#e0e4ea><b>Aluminum Wire T2</b></#e0e4ea>'
     description:
@@ -637,7 +637,7 @@ items:
 
   aluminum_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30159
     display-name: '<#e0e4ea><b>Aluminum Wire T3</b></#e0e4ea>'
     description:
@@ -645,7 +645,7 @@ items:
 
   aluminum_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30165
     display-name: '<#e0e4ea><b>Aluminum Wire T4</b></#e0e4ea>'
     description:
@@ -653,7 +653,7 @@ items:
 
   aluminum_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30171
     display-name: '<#e0e4ea><b>Aluminum Wire T5</b></#e0e4ea>'
     description:
@@ -661,7 +661,7 @@ items:
 
   aluminum_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30177
     display-name: '<#e0e4ea><b>Aluminum Wire T6</b></#e0e4ea>'
     description:
@@ -669,7 +669,7 @@ items:
 
   aluminum_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30183
     display-name: '<#e0e4ea><b>Aluminum Wire T7</b></#e0e4ea>'
     description:
@@ -677,7 +677,7 @@ items:
 
   aluminum_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30189
     display-name: '<#e0e4ea><b>Aluminum Wire T8</b></#e0e4ea>'
     description:
@@ -685,7 +685,7 @@ items:
 
   aluminum_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30195
     display-name: '<#e0e4ea><b>Aluminum Wire T9</b></#e0e4ea>'
     description:
@@ -1185,7 +1185,7 @@ items:
 
   chromium_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30723
     display-name: '<#ff5e5e><b>Chromium Wire T1</b></#ff5e5e>'
     description:
@@ -1193,7 +1193,7 @@ items:
 
   chromium_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30777
     display-name: '<#ff5e5e><b>Chromium Wire T10</b></#ff5e5e>'
     description:
@@ -1201,7 +1201,7 @@ items:
 
   chromium_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30783
     display-name: '<#ff5e5e><b>Chromium Wire T11</b></#ff5e5e>'
     description:
@@ -1209,7 +1209,7 @@ items:
 
   chromium_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30789
     display-name: '<#ff5e5e><b>Chromium Wire T12</b></#ff5e5e>'
     description:
@@ -1217,7 +1217,7 @@ items:
 
   chromium_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30729
     display-name: '<#ff5e5e><b>Chromium Wire T2</b></#ff5e5e>'
     description:
@@ -1225,7 +1225,7 @@ items:
 
   chromium_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30735
     display-name: '<#ff5e5e><b>Chromium Wire T3</b></#ff5e5e>'
     description:
@@ -1233,7 +1233,7 @@ items:
 
   chromium_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30741
     display-name: '<#ff5e5e><b>Chromium Wire T4</b></#ff5e5e>'
     description:
@@ -1241,7 +1241,7 @@ items:
 
   chromium_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30747
     display-name: '<#ff5e5e><b>Chromium Wire T5</b></#ff5e5e>'
     description:
@@ -1249,7 +1249,7 @@ items:
 
   chromium_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30753
     display-name: '<#ff5e5e><b>Chromium Wire T6</b></#ff5e5e>'
     description:
@@ -1257,7 +1257,7 @@ items:
 
   chromium_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30759
     display-name: '<#ff5e5e><b>Chromium Wire T7</b></#ff5e5e>'
     description:
@@ -1265,7 +1265,7 @@ items:
 
   chromium_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30765
     display-name: '<#ff5e5e><b>Chromium Wire T8</b></#ff5e5e>'
     description:
@@ -1273,7 +1273,7 @@ items:
 
   chromium_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30771
     display-name: '<#ff5e5e><b>Chromium Wire T9</b></#ff5e5e>'
     description:
@@ -1773,7 +1773,7 @@ items:
 
   cobalt_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30651
     display-name: '<#4b7cff><b>Cobalt Wire T1</b></#4b7cff>'
     description:
@@ -1781,7 +1781,7 @@ items:
 
   cobalt_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30705
     display-name: '<#4b7cff><b>Cobalt Wire T10</b></#4b7cff>'
     description:
@@ -1789,7 +1789,7 @@ items:
 
   cobalt_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30711
     display-name: '<#4b7cff><b>Cobalt Wire T11</b></#4b7cff>'
     description:
@@ -1797,7 +1797,7 @@ items:
 
   cobalt_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30717
     display-name: '<#4b7cff><b>Cobalt Wire T12</b></#4b7cff>'
     description:
@@ -1805,7 +1805,7 @@ items:
 
   cobalt_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30657
     display-name: '<#4b7cff><b>Cobalt Wire T2</b></#4b7cff>'
     description:
@@ -1813,7 +1813,7 @@ items:
 
   cobalt_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30663
     display-name: '<#4b7cff><b>Cobalt Wire T3</b></#4b7cff>'
     description:
@@ -1821,7 +1821,7 @@ items:
 
   cobalt_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30669
     display-name: '<#4b7cff><b>Cobalt Wire T4</b></#4b7cff>'
     description:
@@ -1829,7 +1829,7 @@ items:
 
   cobalt_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30675
     display-name: '<#4b7cff><b>Cobalt Wire T5</b></#4b7cff>'
     description:
@@ -1837,7 +1837,7 @@ items:
 
   cobalt_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30681
     display-name: '<#4b7cff><b>Cobalt Wire T6</b></#4b7cff>'
     description:
@@ -1845,7 +1845,7 @@ items:
 
   cobalt_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30687
     display-name: '<#4b7cff><b>Cobalt Wire T7</b></#4b7cff>'
     description:
@@ -1853,7 +1853,7 @@ items:
 
   cobalt_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30693
     display-name: '<#4b7cff><b>Cobalt Wire T8</b></#4b7cff>'
     description:
@@ -1861,7 +1861,7 @@ items:
 
   cobalt_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30699
     display-name: '<#4b7cff><b>Cobalt Wire T9</b></#4b7cff>'
     description:
@@ -2361,7 +2361,7 @@ items:
 
   copper_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30003
     display-name: '<#f08d49><b>Copper Wire T1</b></#f08d49>'
     description:
@@ -2369,7 +2369,7 @@ items:
 
   copper_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30057
     display-name: '<#f08d49><b>Copper Wire T10</b></#f08d49>'
     description:
@@ -2377,7 +2377,7 @@ items:
 
   copper_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30063
     display-name: '<#f08d49><b>Copper Wire T11</b></#f08d49>'
     description:
@@ -2385,7 +2385,7 @@ items:
 
   copper_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30069
     display-name: '<#f08d49><b>Copper Wire T12</b></#f08d49>'
     description:
@@ -2393,7 +2393,7 @@ items:
 
   copper_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30009
     display-name: '<#f08d49><b>Copper Wire T2</b></#f08d49>'
     description:
@@ -2401,7 +2401,7 @@ items:
 
   copper_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30015
     display-name: '<#f08d49><b>Copper Wire T3</b></#f08d49>'
     description:
@@ -2409,7 +2409,7 @@ items:
 
   copper_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30021
     display-name: '<#f08d49><b>Copper Wire T4</b></#f08d49>'
     description:
@@ -2417,7 +2417,7 @@ items:
 
   copper_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30027
     display-name: '<#f08d49><b>Copper Wire T5</b></#f08d49>'
     description:
@@ -2425,7 +2425,7 @@ items:
 
   copper_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30033
     display-name: '<#f08d49><b>Copper Wire T6</b></#f08d49>'
     description:
@@ -2433,7 +2433,7 @@ items:
 
   copper_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30039
     display-name: '<#f08d49><b>Copper Wire T7</b></#f08d49>'
     description:
@@ -2441,7 +2441,7 @@ items:
 
   copper_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30045
     display-name: '<#f08d49><b>Copper Wire T8</b></#f08d49>'
     description:
@@ -2449,7 +2449,7 @@ items:
 
   copper_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30051
     display-name: '<#f08d49><b>Copper Wire T9</b></#f08d49>'
     description:
@@ -3141,7 +3141,7 @@ items:
 
   iridium_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30867
     display-name: '<#73ffb8><b>Iridium Wire T1</b></#73ffb8>'
     description:
@@ -3149,7 +3149,7 @@ items:
 
   iridium_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30921
     display-name: '<#73ffb8><b>Iridium Wire T10</b></#73ffb8>'
     description:
@@ -3157,7 +3157,7 @@ items:
 
   iridium_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30927
     display-name: '<#73ffb8><b>Iridium Wire T11</b></#73ffb8>'
     description:
@@ -3165,7 +3165,7 @@ items:
 
   iridium_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30933
     display-name: '<#73ffb8><b>Iridium Wire T12</b></#73ffb8>'
     description:
@@ -3173,7 +3173,7 @@ items:
 
   iridium_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30873
     display-name: '<#73ffb8><b>Iridium Wire T2</b></#73ffb8>'
     description:
@@ -3181,7 +3181,7 @@ items:
 
   iridium_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30879
     display-name: '<#73ffb8><b>Iridium Wire T3</b></#73ffb8>'
     description:
@@ -3189,7 +3189,7 @@ items:
 
   iridium_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30885
     display-name: '<#73ffb8><b>Iridium Wire T4</b></#73ffb8>'
     description:
@@ -3197,7 +3197,7 @@ items:
 
   iridium_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30891
     display-name: '<#73ffb8><b>Iridium Wire T5</b></#73ffb8>'
     description:
@@ -3205,7 +3205,7 @@ items:
 
   iridium_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30897
     display-name: '<#73ffb8><b>Iridium Wire T6</b></#73ffb8>'
     description:
@@ -3213,7 +3213,7 @@ items:
 
   iridium_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30903
     display-name: '<#73ffb8><b>Iridium Wire T7</b></#73ffb8>'
     description:
@@ -3221,7 +3221,7 @@ items:
 
   iridium_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30909
     display-name: '<#73ffb8><b>Iridium Wire T8</b></#73ffb8>'
     description:
@@ -3229,7 +3229,7 @@ items:
 
   iridium_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30915
     display-name: '<#73ffb8><b>Iridium Wire T9</b></#73ffb8>'
     description:
@@ -3729,7 +3729,7 @@ items:
 
   lead_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30363
     display-name: '<#6f7680><b>Lead Wire T1</b></#6f7680>'
     description:
@@ -3737,7 +3737,7 @@ items:
 
   lead_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30417
     display-name: '<#6f7680><b>Lead Wire T10</b></#6f7680>'
     description:
@@ -3745,7 +3745,7 @@ items:
 
   lead_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30423
     display-name: '<#6f7680><b>Lead Wire T11</b></#6f7680>'
     description:
@@ -3753,7 +3753,7 @@ items:
 
   lead_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30429
     display-name: '<#6f7680><b>Lead Wire T12</b></#6f7680>'
     description:
@@ -3761,7 +3761,7 @@ items:
 
   lead_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30369
     display-name: '<#6f7680><b>Lead Wire T2</b></#6f7680>'
     description:
@@ -3769,7 +3769,7 @@ items:
 
   lead_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30375
     display-name: '<#6f7680><b>Lead Wire T3</b></#6f7680>'
     description:
@@ -3777,7 +3777,7 @@ items:
 
   lead_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30381
     display-name: '<#6f7680><b>Lead Wire T4</b></#6f7680>'
     description:
@@ -3785,7 +3785,7 @@ items:
 
   lead_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30387
     display-name: '<#6f7680><b>Lead Wire T5</b></#6f7680>'
     description:
@@ -3793,7 +3793,7 @@ items:
 
   lead_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30393
     display-name: '<#6f7680><b>Lead Wire T6</b></#6f7680>'
     description:
@@ -3801,7 +3801,7 @@ items:
 
   lead_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30399
     display-name: '<#6f7680><b>Lead Wire T7</b></#6f7680>'
     description:
@@ -3809,7 +3809,7 @@ items:
 
   lead_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30405
     display-name: '<#6f7680><b>Lead Wire T8</b></#6f7680>'
     description:
@@ -3817,7 +3817,7 @@ items:
 
   lead_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30411
     display-name: '<#6f7680><b>Lead Wire T9</b></#6f7680>'
     description:
@@ -4317,7 +4317,7 @@ items:
 
   nickel_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30219
     display-name: '<#f5d17f><b>Nickel Wire T1</b></#f5d17f>'
     description:
@@ -4325,7 +4325,7 @@ items:
 
   nickel_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30273
     display-name: '<#f5d17f><b>Nickel Wire T10</b></#f5d17f>'
     description:
@@ -4333,7 +4333,7 @@ items:
 
   nickel_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30279
     display-name: '<#f5d17f><b>Nickel Wire T11</b></#f5d17f>'
     description:
@@ -4341,7 +4341,7 @@ items:
 
   nickel_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30285
     display-name: '<#f5d17f><b>Nickel Wire T12</b></#f5d17f>'
     description:
@@ -4349,7 +4349,7 @@ items:
 
   nickel_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30225
     display-name: '<#f5d17f><b>Nickel Wire T2</b></#f5d17f>'
     description:
@@ -4357,7 +4357,7 @@ items:
 
   nickel_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30231
     display-name: '<#f5d17f><b>Nickel Wire T3</b></#f5d17f>'
     description:
@@ -4365,7 +4365,7 @@ items:
 
   nickel_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30237
     display-name: '<#f5d17f><b>Nickel Wire T4</b></#f5d17f>'
     description:
@@ -4373,7 +4373,7 @@ items:
 
   nickel_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30243
     display-name: '<#f5d17f><b>Nickel Wire T5</b></#f5d17f>'
     description:
@@ -4381,7 +4381,7 @@ items:
 
   nickel_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30249
     display-name: '<#f5d17f><b>Nickel Wire T6</b></#f5d17f>'
     description:
@@ -4389,7 +4389,7 @@ items:
 
   nickel_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30255
     display-name: '<#f5d17f><b>Nickel Wire T7</b></#f5d17f>'
     description:
@@ -4397,7 +4397,7 @@ items:
 
   nickel_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30261
     display-name: '<#f5d17f><b>Nickel Wire T8</b></#f5d17f>'
     description:
@@ -4405,7 +4405,7 @@ items:
 
   nickel_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30267
     display-name: '<#f5d17f><b>Nickel Wire T9</b></#f5d17f>'
     description:
@@ -4905,7 +4905,7 @@ items:
 
   osmium_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30939
     display-name: '<#b083ff><b>Osmium Wire T1</b></#b083ff>'
     description:
@@ -4913,7 +4913,7 @@ items:
 
   osmium_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30993
     display-name: '<#b083ff><b>Osmium Wire T10</b></#b083ff>'
     description:
@@ -4921,7 +4921,7 @@ items:
 
   osmium_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30999
     display-name: '<#b083ff><b>Osmium Wire T11</b></#b083ff>'
     description:
@@ -4929,7 +4929,7 @@ items:
 
   osmium_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31005
     display-name: '<#b083ff><b>Osmium Wire T12</b></#b083ff>'
     description:
@@ -4937,7 +4937,7 @@ items:
 
   osmium_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30945
     display-name: '<#b083ff><b>Osmium Wire T2</b></#b083ff>'
     description:
@@ -4945,7 +4945,7 @@ items:
 
   osmium_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30951
     display-name: '<#b083ff><b>Osmium Wire T3</b></#b083ff>'
     description:
@@ -4953,7 +4953,7 @@ items:
 
   osmium_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30957
     display-name: '<#b083ff><b>Osmium Wire T4</b></#b083ff>'
     description:
@@ -4961,7 +4961,7 @@ items:
 
   osmium_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30963
     display-name: '<#b083ff><b>Osmium Wire T5</b></#b083ff>'
     description:
@@ -4969,7 +4969,7 @@ items:
 
   osmium_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30969
     display-name: '<#b083ff><b>Osmium Wire T6</b></#b083ff>'
     description:
@@ -4977,7 +4977,7 @@ items:
 
   osmium_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30975
     display-name: '<#b083ff><b>Osmium Wire T7</b></#b083ff>'
     description:
@@ -4985,7 +4985,7 @@ items:
 
   osmium_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30981
     display-name: '<#b083ff><b>Osmium Wire T8</b></#b083ff>'
     description:
@@ -4993,7 +4993,7 @@ items:
 
   osmium_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30987
     display-name: '<#b083ff><b>Osmium Wire T9</b></#b083ff>'
     description:
@@ -5493,7 +5493,7 @@ items:
 
   palladium_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31083
     display-name: '<#77d4e6><b>Palladium Wire T1</b></#77d4e6>'
     description:
@@ -5501,7 +5501,7 @@ items:
 
   palladium_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31137
     display-name: '<#77d4e6><b>Palladium Wire T10</b></#77d4e6>'
     description:
@@ -5509,7 +5509,7 @@ items:
 
   palladium_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31143
     display-name: '<#77d4e6><b>Palladium Wire T11</b></#77d4e6>'
     description:
@@ -5517,7 +5517,7 @@ items:
 
   palladium_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31149
     display-name: '<#77d4e6><b>Palladium Wire T12</b></#77d4e6>'
     description:
@@ -5525,7 +5525,7 @@ items:
 
   palladium_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31089
     display-name: '<#77d4e6><b>Palladium Wire T2</b></#77d4e6>'
     description:
@@ -5533,7 +5533,7 @@ items:
 
   palladium_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31095
     display-name: '<#77d4e6><b>Palladium Wire T3</b></#77d4e6>'
     description:
@@ -5541,7 +5541,7 @@ items:
 
   palladium_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31101
     display-name: '<#77d4e6><b>Palladium Wire T4</b></#77d4e6>'
     description:
@@ -5549,7 +5549,7 @@ items:
 
   palladium_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31107
     display-name: '<#77d4e6><b>Palladium Wire T5</b></#77d4e6>'
     description:
@@ -5557,7 +5557,7 @@ items:
 
   palladium_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31113
     display-name: '<#77d4e6><b>Palladium Wire T6</b></#77d4e6>'
     description:
@@ -5565,7 +5565,7 @@ items:
 
   palladium_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31119
     display-name: '<#77d4e6><b>Palladium Wire T7</b></#77d4e6>'
     description:
@@ -5573,7 +5573,7 @@ items:
 
   palladium_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31125
     display-name: '<#77d4e6><b>Palladium Wire T8</b></#77d4e6>'
     description:
@@ -5581,7 +5581,7 @@ items:
 
   palladium_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31131
     display-name: '<#77d4e6><b>Palladium Wire T9</b></#77d4e6>'
     description:
@@ -6177,7 +6177,7 @@ items:
 
   platinum_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30795
     display-name: '<#7ef8ff><b>Platinum Wire T1</b></#7ef8ff>'
     description:
@@ -6185,7 +6185,7 @@ items:
 
   platinum_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30849
     display-name: '<#7ef8ff><b>Platinum Wire T10</b></#7ef8ff>'
     description:
@@ -6193,7 +6193,7 @@ items:
 
   platinum_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30855
     display-name: '<#7ef8ff><b>Platinum Wire T11</b></#7ef8ff>'
     description:
@@ -6201,7 +6201,7 @@ items:
 
   platinum_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30861
     display-name: '<#7ef8ff><b>Platinum Wire T12</b></#7ef8ff>'
     description:
@@ -6209,7 +6209,7 @@ items:
 
   platinum_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30801
     display-name: '<#7ef8ff><b>Platinum Wire T2</b></#7ef8ff>'
     description:
@@ -6217,7 +6217,7 @@ items:
 
   platinum_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30807
     display-name: '<#7ef8ff><b>Platinum Wire T3</b></#7ef8ff>'
     description:
@@ -6225,7 +6225,7 @@ items:
 
   platinum_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30813
     display-name: '<#7ef8ff><b>Platinum Wire T4</b></#7ef8ff>'
     description:
@@ -6233,7 +6233,7 @@ items:
 
   platinum_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30819
     display-name: '<#7ef8ff><b>Platinum Wire T5</b></#7ef8ff>'
     description:
@@ -6241,7 +6241,7 @@ items:
 
   platinum_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30825
     display-name: '<#7ef8ff><b>Platinum Wire T6</b></#7ef8ff>'
     description:
@@ -6249,7 +6249,7 @@ items:
 
   platinum_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30831
     display-name: '<#7ef8ff><b>Platinum Wire T7</b></#7ef8ff>'
     description:
@@ -6257,7 +6257,7 @@ items:
 
   platinum_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30837
     display-name: '<#7ef8ff><b>Platinum Wire T8</b></#7ef8ff>'
     description:
@@ -6265,7 +6265,7 @@ items:
 
   platinum_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30843
     display-name: '<#7ef8ff><b>Platinum Wire T9</b></#7ef8ff>'
     description:
@@ -6957,7 +6957,7 @@ items:
 
   silver_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30291
     display-name: '<#e7edf5><b>Silver Wire T1</b></#e7edf5>'
     description:
@@ -6965,7 +6965,7 @@ items:
 
   silver_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30345
     display-name: '<#e7edf5><b>Silver Wire T10</b></#e7edf5>'
     description:
@@ -6973,7 +6973,7 @@ items:
 
   silver_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30351
     display-name: '<#e7edf5><b>Silver Wire T11</b></#e7edf5>'
     description:
@@ -6981,7 +6981,7 @@ items:
 
   silver_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30357
     display-name: '<#e7edf5><b>Silver Wire T12</b></#e7edf5>'
     description:
@@ -6989,7 +6989,7 @@ items:
 
   silver_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30297
     display-name: '<#e7edf5><b>Silver Wire T2</b></#e7edf5>'
     description:
@@ -6997,7 +6997,7 @@ items:
 
   silver_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30303
     display-name: '<#e7edf5><b>Silver Wire T3</b></#e7edf5>'
     description:
@@ -7005,7 +7005,7 @@ items:
 
   silver_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30309
     display-name: '<#e7edf5><b>Silver Wire T4</b></#e7edf5>'
     description:
@@ -7013,7 +7013,7 @@ items:
 
   silver_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30315
     display-name: '<#e7edf5><b>Silver Wire T5</b></#e7edf5>'
     description:
@@ -7021,7 +7021,7 @@ items:
 
   silver_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30321
     display-name: '<#e7edf5><b>Silver Wire T6</b></#e7edf5>'
     description:
@@ -7029,7 +7029,7 @@ items:
 
   silver_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30327
     display-name: '<#e7edf5><b>Silver Wire T7</b></#e7edf5>'
     description:
@@ -7037,7 +7037,7 @@ items:
 
   silver_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30333
     display-name: '<#e7edf5><b>Silver Wire T8</b></#e7edf5>'
     description:
@@ -7045,7 +7045,7 @@ items:
 
   silver_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30339
     display-name: '<#e7edf5><b>Silver Wire T9</b></#e7edf5>'
     description:
@@ -7545,7 +7545,7 @@ items:
 
   tin_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30075
     display-name: '<#c9d0d8><b>Tin Wire T1</b></#c9d0d8>'
     description:
@@ -7553,7 +7553,7 @@ items:
 
   tin_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30129
     display-name: '<#c9d0d8><b>Tin Wire T10</b></#c9d0d8>'
     description:
@@ -7561,7 +7561,7 @@ items:
 
   tin_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30135
     display-name: '<#c9d0d8><b>Tin Wire T11</b></#c9d0d8>'
     description:
@@ -7569,7 +7569,7 @@ items:
 
   tin_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30141
     display-name: '<#c9d0d8><b>Tin Wire T12</b></#c9d0d8>'
     description:
@@ -7577,7 +7577,7 @@ items:
 
   tin_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30081
     display-name: '<#c9d0d8><b>Tin Wire T2</b></#c9d0d8>'
     description:
@@ -7585,7 +7585,7 @@ items:
 
   tin_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30087
     display-name: '<#c9d0d8><b>Tin Wire T3</b></#c9d0d8>'
     description:
@@ -7593,7 +7593,7 @@ items:
 
   tin_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30093
     display-name: '<#c9d0d8><b>Tin Wire T4</b></#c9d0d8>'
     description:
@@ -7601,7 +7601,7 @@ items:
 
   tin_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30099
     display-name: '<#c9d0d8><b>Tin Wire T5</b></#c9d0d8>'
     description:
@@ -7609,7 +7609,7 @@ items:
 
   tin_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30105
     display-name: '<#c9d0d8><b>Tin Wire T6</b></#c9d0d8>'
     description:
@@ -7617,7 +7617,7 @@ items:
 
   tin_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30111
     display-name: '<#c9d0d8><b>Tin Wire T7</b></#c9d0d8>'
     description:
@@ -7625,7 +7625,7 @@ items:
 
   tin_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30117
     display-name: '<#c9d0d8><b>Tin Wire T8</b></#c9d0d8>'
     description:
@@ -7633,7 +7633,7 @@ items:
 
   tin_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30123
     display-name: '<#c9d0d8><b>Tin Wire T9</b></#c9d0d8>'
     description:
@@ -8133,7 +8133,7 @@ items:
 
   titanium_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30507
     display-name: '<#9ea8b8><b>Titanium Wire T1</b></#9ea8b8>'
     description:
@@ -8141,7 +8141,7 @@ items:
 
   titanium_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30561
     display-name: '<#9ea8b8><b>Titanium Wire T10</b></#9ea8b8>'
     description:
@@ -8149,7 +8149,7 @@ items:
 
   titanium_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30567
     display-name: '<#9ea8b8><b>Titanium Wire T11</b></#9ea8b8>'
     description:
@@ -8157,7 +8157,7 @@ items:
 
   titanium_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30573
     display-name: '<#9ea8b8><b>Titanium Wire T12</b></#9ea8b8>'
     description:
@@ -8165,7 +8165,7 @@ items:
 
   titanium_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30513
     display-name: '<#9ea8b8><b>Titanium Wire T2</b></#9ea8b8>'
     description:
@@ -8173,7 +8173,7 @@ items:
 
   titanium_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30519
     display-name: '<#9ea8b8><b>Titanium Wire T3</b></#9ea8b8>'
     description:
@@ -8181,7 +8181,7 @@ items:
 
   titanium_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30525
     display-name: '<#9ea8b8><b>Titanium Wire T4</b></#9ea8b8>'
     description:
@@ -8189,7 +8189,7 @@ items:
 
   titanium_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30531
     display-name: '<#9ea8b8><b>Titanium Wire T5</b></#9ea8b8>'
     description:
@@ -8197,7 +8197,7 @@ items:
 
   titanium_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30537
     display-name: '<#9ea8b8><b>Titanium Wire T6</b></#9ea8b8>'
     description:
@@ -8205,7 +8205,7 @@ items:
 
   titanium_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30543
     display-name: '<#9ea8b8><b>Titanium Wire T7</b></#9ea8b8>'
     description:
@@ -8213,7 +8213,7 @@ items:
 
   titanium_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30549
     display-name: '<#9ea8b8><b>Titanium Wire T8</b></#9ea8b8>'
     description:
@@ -8221,7 +8221,7 @@ items:
 
   titanium_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30555
     display-name: '<#9ea8b8><b>Titanium Wire T9</b></#9ea8b8>'
     description:
@@ -8721,7 +8721,7 @@ items:
 
   tungsten_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30579
     display-name: '<#6d6f88><b>Tungsten Wire T1</b></#6d6f88>'
     description:
@@ -8729,7 +8729,7 @@ items:
 
   tungsten_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30633
     display-name: '<#6d6f88><b>Tungsten Wire T10</b></#6d6f88>'
     description:
@@ -8737,7 +8737,7 @@ items:
 
   tungsten_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30639
     display-name: '<#6d6f88><b>Tungsten Wire T11</b></#6d6f88>'
     description:
@@ -8745,7 +8745,7 @@ items:
 
   tungsten_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30645
     display-name: '<#6d6f88><b>Tungsten Wire T12</b></#6d6f88>'
     description:
@@ -8753,7 +8753,7 @@ items:
 
   tungsten_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30585
     display-name: '<#6d6f88><b>Tungsten Wire T2</b></#6d6f88>'
     description:
@@ -8761,7 +8761,7 @@ items:
 
   tungsten_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30591
     display-name: '<#6d6f88><b>Tungsten Wire T3</b></#6d6f88>'
     description:
@@ -8769,7 +8769,7 @@ items:
 
   tungsten_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30597
     display-name: '<#6d6f88><b>Tungsten Wire T4</b></#6d6f88>'
     description:
@@ -8777,7 +8777,7 @@ items:
 
   tungsten_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30603
     display-name: '<#6d6f88><b>Tungsten Wire T5</b></#6d6f88>'
     description:
@@ -8785,7 +8785,7 @@ items:
 
   tungsten_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30609
     display-name: '<#6d6f88><b>Tungsten Wire T6</b></#6d6f88>'
     description:
@@ -8793,7 +8793,7 @@ items:
 
   tungsten_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30615
     display-name: '<#6d6f88><b>Tungsten Wire T7</b></#6d6f88>'
     description:
@@ -8801,7 +8801,7 @@ items:
 
   tungsten_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30621
     display-name: '<#6d6f88><b>Tungsten Wire T8</b></#6d6f88>'
     description:
@@ -8809,7 +8809,7 @@ items:
 
   tungsten_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30627
     display-name: '<#6d6f88><b>Tungsten Wire T9</b></#6d6f88>'
     description:
@@ -9309,7 +9309,7 @@ items:
 
   uranium_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31011
     display-name: '<#bbff66><b>Uranium Wire T1</b></#bbff66>'
     description:
@@ -9317,7 +9317,7 @@ items:
 
   uranium_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31065
     display-name: '<#bbff66><b>Uranium Wire T10</b></#bbff66>'
     description:
@@ -9325,7 +9325,7 @@ items:
 
   uranium_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31071
     display-name: '<#bbff66><b>Uranium Wire T11</b></#bbff66>'
     description:
@@ -9333,7 +9333,7 @@ items:
 
   uranium_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31077
     display-name: '<#bbff66><b>Uranium Wire T12</b></#bbff66>'
     description:
@@ -9341,7 +9341,7 @@ items:
 
   uranium_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31017
     display-name: '<#bbff66><b>Uranium Wire T2</b></#bbff66>'
     description:
@@ -9349,7 +9349,7 @@ items:
 
   uranium_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31023
     display-name: '<#bbff66><b>Uranium Wire T3</b></#bbff66>'
     description:
@@ -9357,7 +9357,7 @@ items:
 
   uranium_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31029
     display-name: '<#bbff66><b>Uranium Wire T4</b></#bbff66>'
     description:
@@ -9365,7 +9365,7 @@ items:
 
   uranium_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31035
     display-name: '<#bbff66><b>Uranium Wire T5</b></#bbff66>'
     description:
@@ -9373,7 +9373,7 @@ items:
 
   uranium_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31041
     display-name: '<#bbff66><b>Uranium Wire T6</b></#bbff66>'
     description:
@@ -9381,7 +9381,7 @@ items:
 
   uranium_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31047
     display-name: '<#bbff66><b>Uranium Wire T7</b></#bbff66>'
     description:
@@ -9389,7 +9389,7 @@ items:
 
   uranium_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31053
     display-name: '<#bbff66><b>Uranium Wire T8</b></#bbff66>'
     description:
@@ -9397,7 +9397,7 @@ items:
 
   uranium_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 31059
     display-name: '<#bbff66><b>Uranium Wire T9</b></#bbff66>'
     description:
@@ -9897,7 +9897,7 @@ items:
 
   zinc_wire_t1:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30435
     display-name: '<#b7c0c6><b>Zinc Wire T1</b></#b7c0c6>'
     description:
@@ -9905,7 +9905,7 @@ items:
 
   zinc_wire_t10:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30489
     display-name: '<#b7c0c6><b>Zinc Wire T10</b></#b7c0c6>'
     description:
@@ -9913,7 +9913,7 @@ items:
 
   zinc_wire_t11:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30495
     display-name: '<#b7c0c6><b>Zinc Wire T11</b></#b7c0c6>'
     description:
@@ -9921,7 +9921,7 @@ items:
 
   zinc_wire_t12:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30501
     display-name: '<#b7c0c6><b>Zinc Wire T12</b></#b7c0c6>'
     description:
@@ -9929,7 +9929,7 @@ items:
 
   zinc_wire_t2:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30441
     display-name: '<#b7c0c6><b>Zinc Wire T2</b></#b7c0c6>'
     description:
@@ -9937,7 +9937,7 @@ items:
 
   zinc_wire_t3:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30447
     display-name: '<#b7c0c6><b>Zinc Wire T3</b></#b7c0c6>'
     description:
@@ -9945,7 +9945,7 @@ items:
 
   zinc_wire_t4:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30453
     display-name: '<#b7c0c6><b>Zinc Wire T4</b></#b7c0c6>'
     description:
@@ -9953,7 +9953,7 @@ items:
 
   zinc_wire_t5:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30459
     display-name: '<#b7c0c6><b>Zinc Wire T5</b></#b7c0c6>'
     description:
@@ -9961,7 +9961,7 @@ items:
 
   zinc_wire_t6:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30465
     display-name: '<#b7c0c6><b>Zinc Wire T6</b></#b7c0c6>'
     description:
@@ -9969,7 +9969,7 @@ items:
 
   zinc_wire_t7:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30471
     display-name: '<#b7c0c6><b>Zinc Wire T7</b></#b7c0c6>'
     description:
@@ -9977,7 +9977,7 @@ items:
 
   zinc_wire_t8:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30477
     display-name: '<#b7c0c6><b>Zinc Wire T8</b></#b7c0c6>'
     description:
@@ -9985,7 +9985,7 @@ items:
 
   zinc_wire_t9:
     enabled: true
-    base-material: CHAIN
+    base-material: IRON_CHAIN
     custom-model-data: 30483
     display-name: '<#b7c0c6><b>Zinc Wire T9</b></#b7c0c6>'
     description:
