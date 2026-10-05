@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/DrakesTech/main/banner.svg" width="100%" alt="DRAKES TECH animated banner" />
+  <img src="https://raw.githubusercontent.com/SlimefunNewHorizons/DrakesTech/main/banner.svg" width="100%" alt="DRAKES TECH animated banner" />
 </p>
 
 # DrakesTech
@@ -112,6 +112,6 @@ python .\tools\content-gen\generate_massive_tech_content.py
 
 ## 📄 License & Intellectual Property
 
-Copyright © 2026 [**JackStar6677-1**](https://github.com/JackStar6677-1) · [**DrakesCraft Labs**](https://github.com/DrakesCraft-Labs). All Rights Reserved.
+Copyright © 2026 [**JackStar6677-1**](https://github.com/JackStar6677-1) · [**DrakesCraft Labs**](https://github.com/SlimefunNewHorizons). All Rights Reserved.
 
 This software is **Source-Available** for public inspection and technical audit. Redistribution, commercial repackaging, or unauthorized derivative distribution without explicit written permission from the author is strictly prohibited.
