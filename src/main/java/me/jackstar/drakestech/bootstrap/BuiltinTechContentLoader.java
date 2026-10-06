@@ -359,7 +359,7 @@ public final class BuiltinTechContentLoader {
                 "network_bridge",
                 "machines",
                 "<yellow><b>Network Bridge</b></yellow>",
-                Material.CHAIN,
+                Material.IRON_CHAIN,
                 List.of("<gray>Extends network reach between nodes.</gray>"),
                 List.of("<gray>Use as low-cost connector between buses and storage.</gray>"),
                 NetworkBridgeMachine::new);
@@ -469,6 +469,10 @@ public final class BuiltinTechContentLoader {
         }
 
         String clean = rawValue.trim();
+        // CHAIN was renamed to IRON_CHAIN in 1.21.9; keep old server-side tech-content.yml copies working.
+        if (clean.equalsIgnoreCase("CHAIN") || clean.equalsIgnoreCase("minecraft:chain")) {
+            clean = "IRON_CHAIN";
+        }
         Material material = null;
         try {
             material = Material.valueOf(clean.toUpperCase(Locale.ROOT));

@@ -906,7 +906,7 @@ public class TechGuideManager implements Listener {
         aliases.put("SOLAR GENERATOR", Material.DAYLIGHT_DETECTOR);
         aliases.put("ENERGY CORE", Material.HEART_OF_THE_SEA);
         aliases.put("COPPER PLATE", Material.IRON_NUGGET);
-        aliases.put("COPPER CABLE", Material.CHAIN);
+        aliases.put("COPPER CABLE", Material.IRON_CHAIN);
         aliases.put("REINFORCED PLATE", Material.IRON_INGOT);
         aliases.put("REINFORCED PLATES", Material.NETHERITE_INGOT);
         aliases.put("ENERGY THREAD", Material.STRING);
